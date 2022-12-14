@@ -54,12 +54,13 @@ end
 
 def make_display_list(parse_result)
   result = []
-  if parse_result == [[], {}]
-    file_list = Dir.glob('*', base: Dir.pwd).sort
+  paths = parse_result[0]
+  options = parse_result[1]
+  if paths == []
+    flag = options[:a] ? File::FNM_DOTMATCH : 0
+    file_list = Dir.glob('*', base: Dir.pwd, flags: flag).sort
     adjust_list_to_display(file_list).each { |line| result << line }
   else
-    paths = parse_result[0]
-    options = parse_result[1]
     file_list = analyse_file_paths(paths)
     display_lines = adjust_list_to_display(file_list.sort)
     display_lines.each { |line| result << line }
