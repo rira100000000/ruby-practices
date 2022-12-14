@@ -35,17 +35,17 @@ class ListTest < Minitest::Test
     ls_path = "#{__dir__.sub!(%r{/test$}, '')}/lib/ls.rb"
     output = `ruby #{ls_path} #{test_data_dir} -a`
     true_str =
-    ".        03_file  12_file            \n"\
-    ".dir     03dir    13_file            \n"\
-    ".dir2    04_file  14_file            \n"\
-    ".file    04dir    15_file            \n"\
-    ".file2   05_file  16_file            \n"\
-    "00_file  06_file  17_file            \n"\
-    "00dir    07_file  18_file            \n"\
-    "01_file  08_file  19_file            \n"\
-    "01dir    09_file  attr_file          \n"\
-    "02_file  10_file  make_test_file.rb  \n"\
-    "02dir    11_file  \n"
+      ".        03_file  12_file            \n"\
+      ".dir     03dir    13_file            \n"\
+      ".dir2    04_file  14_file            \n"\
+      ".file    04dir    15_file            \n"\
+      ".file2   05_file  16_file            \n"\
+      "00_file  06_file  17_file            \n"\
+      "00dir    07_file  18_file            \n"\
+      "01_file  08_file  19_file            \n"\
+      "01dir    09_file  attr_file          \n"\
+      "02_file  10_file  make_test_file.rb  \n"\
+      "02dir    11_file  \n"
     assert_equal true_str, output
     Dir.chdir(current_dir)
   end
