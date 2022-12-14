@@ -56,8 +56,8 @@ def make_display_list(parse_result)
   result = []
   paths = parse_result[0]
   options = parse_result[1]
+  flag = options[:a] ? File::FNM_DOTMATCH : 0
   if paths == []
-    flag = options[:a] ? File::FNM_DOTMATCH : 0
     file_list = Dir.glob('*', base: Dir.pwd, flags: flag).sort
     adjust_list_to_display(file_list).each { |line| result << line }
   else
@@ -65,20 +65,19 @@ def make_display_list(parse_result)
     display_lines = adjust_list_to_display(file_list.sort)
     display_lines.each { |line| result << line }
     result << "\n" unless file_list == []
-    directorys = analyse_directory_paths(paths, options[:a])
+    directorys = analyse_directory_paths(paths, flag)
     result.push(*directorys)
     result
   end
 end
 
-def analyse_directory_paths(paths, option_a)
+def analyse_directory_paths(paths, flag)
   result = []
   paths.each do |path|
     next unless File::Stat.new(path).directory?
 
     result << "\n" unless result == []
     result << "#{path}:" if paths.size > 1
-    flag = option_a ? File::FNM_DOTMATCH : 0
     file_list = Dir.glob('*', base: path, flags: flag).sort
     display_lines = adjust_list_to_display(file_list)
     display_lines.each { |line| result << line }
