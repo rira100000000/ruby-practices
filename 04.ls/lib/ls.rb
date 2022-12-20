@@ -44,7 +44,7 @@ def parse_option
   opt = OptionParser.new
   # TODO: オプションの説明追加
   opt.on('-a', '.で始まる要素も表示します')
-  opt.on('-r', '今後対応予定')
+  opt.on('-r', '逆順でソートして表示します')
   opt.on('-l', '今後対応予定')
   opt.banner = 'Usage: ls [-a][-r][-l]'
   options = {}
@@ -58,6 +58,7 @@ def make_display_list(parse_result)
   flag = options[:a] ? File::FNM_DOTMATCH : 0
   if paths == []
     file_list = Dir.glob('*', base: Dir.pwd, flags: flag).sort
+    file_list.reverse! if options[:r]
     adjust_list_to_display(file_list).each { |line| result << line }
   else
     file_list = analyse_file_paths(paths)
