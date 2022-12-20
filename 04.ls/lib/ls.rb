@@ -61,9 +61,7 @@ def make_display_list(parse_result)
     file_list.reverse! if options[:r]
     adjust_list_to_display(file_list).each { |line| result << line }
   else
-    paths.reverse! if options[:r]
-    file_list = analyse_file_paths(paths).sort
-    file_list.reverse! if options[:r]
+    file_list = analyse_file_paths(paths, options[:r])
     display_lines = adjust_list_to_display(file_list)
     display_lines.each { |line| result << line }
     result << "\n" unless file_list == []
@@ -75,6 +73,7 @@ end
 
 def analyse_directory_paths(paths, flag, option_r)
   result = []
+  paths.reverse! if option_r
   paths.each do |path|
     next unless File::Stat.new(path).directory?
 
@@ -88,8 +87,9 @@ def analyse_directory_paths(paths, flag, option_r)
   result
 end
 
-def analyse_file_paths(paths)
-  paths.select { |path| File::Stat.new(path).file? }
+def analyse_file_paths(paths, option_r)
+  result = paths.select { |path| File::Stat.new(path).file? }.sort
+  option_r ? result.reverse! : result
 end
 
 puts make_display_list(parse_option)
