@@ -54,8 +54,7 @@ end
 
 def make_display_list(parse_result)
   result = []
-  paths = parse_result[0]
-  options = parse_result[1]
+  paths, options = parse_result
   flag = options[:a] ? File::FNM_DOTMATCH : 0
   if paths == []
     file_list = Dir.glob('*', base: Dir.pwd, flags: flag).sort
