@@ -71,11 +71,30 @@ class ListTest < Minitest::Test
     Dir.chdir(current_dir)
   end
 
-  def test_current_dir_list_display_with_option_a
+  def test_current_dir_list_display_with_option_r
     current_dir = Dir.pwd
     Dir.chdir(test_data_dir)
     ls_path = "#{__dir__.sub!(%r{/test$}, '')}/lib/ls.rb"
     output = `ruby #{ls_path} -r`
+    true_str =
+      "make_test_file.rb  12_file  04_file  \n"\
+      "attr_file          11_file  03dir    \n"\
+      "19_file            10_file  03_file  \n"\
+      "18_file            09_file  02dir    \n"\
+      "17_file            08_file  02_file  \n"\
+      "16_file            07_file  01dir    \n"\
+      "15_file            06_file  01_file  \n"\
+      "14_file            05_file  00dir    \n"\
+      "13_file            04dir    00_file  \n"
+    assert_equal true_str, output
+    Dir.chdir(current_dir)
+  end
+
+  def test_dir_list_display_with_dir_path_and_option_r
+    current_dir = Dir.pwd
+    Dir.chdir(test_data_dir)
+    ls_path = "#{__dir__.sub!(%r{/test$}, '')}/lib/ls.rb"
+    output = `ruby #{ls_path} #{test_data_dir} -r`
     true_str =
       "make_test_file.rb  12_file  04_file  \n"\
       "attr_file          11_file  03dir    \n"\

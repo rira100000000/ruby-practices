@@ -65,13 +65,13 @@ def make_display_list(parse_result)
     display_lines = adjust_list_to_display(file_list.sort)
     display_lines.each { |line| result << line }
     result << "\n" unless file_list == []
-    directorys = analyse_directory_paths(paths, flag)
+    directorys = analyse_directory_paths(paths, flag, options[:r])
     result.push(*directorys)
     result
   end
 end
 
-def analyse_directory_paths(paths, flag)
+def analyse_directory_paths(paths, flag, option_r)
   result = []
   paths.each do |path|
     next unless File::Stat.new(path).directory?
@@ -79,6 +79,7 @@ def analyse_directory_paths(paths, flag)
     result << "\n" unless result == []
     result << "#{path}:" if paths.size > 1
     file_list = Dir.glob('*', base: path, flags: flag).sort
+    file_list.reverse! if option_r
     display_lines = adjust_list_to_display(file_list)
     display_lines.each { |line| result << line }
   end
