@@ -126,6 +126,26 @@ class ListTest < Minitest::Test
     Dir.chdir(current_dir)
   end
 
+  def test_dir_list_display_with_multiple_dir_and_file_paths_and_option_r
+    current_dir = Dir.pwd
+    Dir.chdir(test_data_dir)
+    ls_path = "#{__dir__.sub!(%r{/test$}, '')}/lib/ls.rb"
+    output = `ruby #{ls_path} 00dir 01dir 01_file 02_file 03_file 04_file -r;`
+    true_str =
+      "04_file  02_file  \n"\
+      "03_file  01_file  \n"\
+      "\n"\
+      "01dir:\n"\
+      "35_file  33_file  31_file  \n"\
+      "34_file  32_file  30_file  \n"\
+      "\n"\
+      "00dir:\n"\
+      "25_file  23_file  21_file  \n"\
+      "24_file  22_file  20_file  \n"
+    assert_equal true_str, output
+    Dir.chdir(current_dir)
+  end
+
   def test_adjust_list_to_display
     files = Dir.glob('*', base: test_data_dir)
     assert_equal '00_file  04dir    13_file            ', adjust_list_to_display(files)[0]

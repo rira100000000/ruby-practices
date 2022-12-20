@@ -63,6 +63,7 @@ def make_display_list(parse_result)
   else
     paths.reverse! if options[:r]
     file_list = analyse_file_paths(paths).sort
+    file_list.reverse! if options[:r]
     display_lines = adjust_list_to_display(file_list)
     display_lines.each { |line| result << line }
     result << "\n" unless file_list == []
