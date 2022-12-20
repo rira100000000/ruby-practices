@@ -10,7 +10,7 @@ class ListTest < Minitest::Test
     @test_data_dir = "#{__dir__}/test_data"
   end
 
-  def test_current_dir_list_diplay
+  def test_current_dir_list_display
     current_dir = Dir.pwd
     Dir.chdir(test_data_dir)
     ls_path = "#{__dir__.sub!(%r{/test$}, '')}/lib/ls.rb"
@@ -25,6 +25,48 @@ class ListTest < Minitest::Test
       "03_file  10_file  19_file            \n"\
       "03dir    11_file  attr_file          \n"\
       "04_file  12_file  make_test_file.rb  \n"
+    assert_equal true_str, output
+    Dir.chdir(current_dir)
+  end
+
+  def test_current_dir_list_display_with_option_a
+    current_dir = Dir.pwd
+    Dir.chdir(test_data_dir)
+    ls_path = "#{__dir__.sub!(%r{/test$}, '')}/lib/ls.rb"
+    output = `ruby #{ls_path} -a`
+    true_str =
+      ".        03_file  12_file            \n"\
+      ".dir     03dir    13_file            \n"\
+      ".dir2    04_file  14_file            \n"\
+      ".file    04dir    15_file            \n"\
+      ".file2   05_file  16_file            \n"\
+      "00_file  06_file  17_file            \n"\
+      "00dir    07_file  18_file            \n"\
+      "01_file  08_file  19_file            \n"\
+      "01dir    09_file  attr_file          \n"\
+      "02_file  10_file  make_test_file.rb  \n"\
+      "02dir    11_file  \n"
+    assert_equal true_str, output
+    Dir.chdir(current_dir)
+  end
+
+  def test_dir_list_diplay_with_dir_path_and_option_a
+    current_dir = Dir.pwd
+    Dir.chdir(test_data_dir)
+    ls_path = "#{__dir__.sub!(%r{/test$}, '')}/lib/ls.rb"
+    output = `ruby #{ls_path} #{test_data_dir} -a`
+    true_str =
+      ".        03_file  12_file            \n"\
+      ".dir     03dir    13_file            \n"\
+      ".dir2    04_file  14_file            \n"\
+      ".file    04dir    15_file            \n"\
+      ".file2   05_file  16_file            \n"\
+      "00_file  06_file  17_file            \n"\
+      "00dir    07_file  18_file            \n"\
+      "01_file  08_file  19_file            \n"\
+      "01dir    09_file  attr_file          \n"\
+      "02_file  10_file  make_test_file.rb  \n"\
+      "02dir    11_file  \n"
     assert_equal true_str, output
     Dir.chdir(current_dir)
   end

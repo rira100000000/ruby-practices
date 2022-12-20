@@ -43,7 +43,7 @@ end
 def parse_option
   opt = OptionParser.new
   # TODO: オプションの説明追加
-  opt.on('-a', '今後対応予定')
+  opt.on('-a', '.で始まる要素も表示します')
   opt.on('-r', '今後対応予定')
   opt.on('-l', '今後対応予定')
   opt.banner = 'Usage: ls [-a][-r][-l]'
@@ -54,30 +54,30 @@ end
 
 def make_display_list(parse_result)
   result = []
-  if parse_result == [[], {}]
-    file_list = Dir.glob('*', base: Dir.pwd).sort
+  paths, options = parse_result
+  flag = options[:a] ? File::FNM_DOTMATCH : 0
+  if paths == []
+    file_list = Dir.glob('*', base: Dir.pwd, flags: flag).sort
     adjust_list_to_display(file_list).each { |line| result << line }
   else
-    paths = parse_result[0]
-    _options = parse_result[1]
     file_list = analyse_file_paths(paths)
     display_lines = adjust_list_to_display(file_list.sort)
     display_lines.each { |line| result << line }
     result << "\n" unless file_list == []
-    directorys = analyse_directory_paths(paths)
+    directorys = analyse_directory_paths(paths, flag)
     result.push(*directorys)
     result
   end
 end
 
-def analyse_directory_paths(paths)
+def analyse_directory_paths(paths, flag)
   result = []
   paths.each do |path|
     next unless File::Stat.new(path).directory?
 
     result << "\n" unless result == []
     result << "#{path}:" if paths.size > 1
-    file_list = Dir.glob('*', base: path).sort
+    file_list = Dir.glob('*', base: path, flags: flag).sort
     display_lines = adjust_list_to_display(file_list)
     display_lines.each { |line| result << line }
   end
