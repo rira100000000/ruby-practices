@@ -61,35 +61,35 @@ def make_display_list(parse_result)
     file_list.reverse! if options[:r]
     adjust_list_to_display(file_list).each { |line| result << line }
   else
-    file_list = analyse_file_paths(paths, options[:r])
+    file_list = list_file_paths(paths, options[:r])
     display_lines = adjust_list_to_display(file_list)
     display_lines.each { |line| result << line }
     result << "\n" unless file_list == []
-    directorys = analyse_directory_paths(paths, flag, options[:r])
+    directorys = list_directory_paths(paths, flag, options[:r])
     result.push(*directorys)
     result
   end
 end
 
-def analyse_directory_paths(paths, flag, option_r)
+def list_directory_paths(paths, flag, need_reverse_order)
   result = []
-  paths.reverse! if option_r
+  paths.reverse! if need_reverse_order
   paths.each do |path|
     next unless File::Stat.new(path).directory?
 
     result << "\n" unless result == []
     result << "#{path}:" if paths.size > 1
     file_list = Dir.glob('*', base: path, flags: flag).sort
-    file_list.reverse! if option_r
+    file_list.reverse! if need_reverse_order
     display_lines = adjust_list_to_display(file_list)
     display_lines.each { |line| result << line }
   end
   result
 end
 
-def analyse_file_paths(paths, option_r)
+def list_file_paths(paths, need_reverse_order)
   result = paths.select { |path| File::Stat.new(path).file? }.sort
-  option_r ? result.reverse! : result
+  need_reverse_order ? result.reverse! : result
 end
 
 puts make_display_list(parse_option)
