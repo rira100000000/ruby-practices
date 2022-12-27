@@ -111,48 +111,61 @@ def list_file_paths(paths, need_reverse_order)
   need_reverse_order ? result.reverse! : result
 end
 
-def make_long_format_list(_options, paths)
-  file_list = Dir.glob('*', base: Dir.pwd).sort
-  total_blocks = 0
-  link_max_char_length = 0
-  user_name_max_char_length = 0
-  group_name_max_char_length = 0
-  file_size_max_char_length = 0
-  file_name_max_char_length = 0
+def make_long_format_list(paths)
+  max_length_hash =
+    { total_blocks: 0,
+      link_max_char_length: 0,
+      user_name_max_char_length: 0,
+      group_name_max_char_length: 0,
+      file_size_max_char_length: 0,
+      file_name_max_char_length: 0 }
 
-  file_details = file_list.map do |file|
-    stat = File::Stat.new(file)
-    # statの1ブロック単位は512byte
-    # lsコマンドでの1ブロック単位1024byteに合わせるため2で割る
-    total_blocks += stat.blocks / 2
-
-    link_max_char_length = return_larger(stat.nlink.to_s.length, link_max_char_length)
-    user_name_max_char_length = return_larger(Etc.getpwuid(stat.uid).name.to_s.length, user_name_max_char_length)
-    group_name_max_char_length = return_larger(Etc.getgrgid(stat.gid).name.to_s.length, group_name_max_char_length)
-    file_size_max_char_length = return_larger(stat.size.to_s.length, file_size_max_char_length)
-    file_name_max_char_length = return_larger(file.length, file_name_max_char_length)
-
-    [TYPE_LIST[stat.ftype.to_s],
-     get_file_mode(stat),
-     stat.nlink,
-     Etc.getpwuid(stat.uid).name,
-     Etc.getgrgid(stat.gid).name,
-     stat.size,
-     stat.mtime,
-     file]
+  if paths == []
+    file_list = Dir.glob('*', base: Dir.pwd).sort
+    result = list_long_format_list_to_display(file_list.map { |file| fetch_file_details(file, max_length_hash) }, max_length_hash)
+    result.unshift("total #{max_length_hash[:total_blocks]}")
+    return result
+  else
+    parsed_file_list = list_file_paths(paths, options[:r])
+    parsed_directory_list
   end
-
-  result = +"total #{total_blocks}\n"
-  file_details.each do |file_detail|
-    result << "#{file_detail[0]}#{file_detail[1]} "\
-      "#{file_detail[2].to_s.rjust(link_max_char_length)} "\
-      "#{file_detail[3].rjust(user_name_max_char_length)} "\
-      "#{file_detail[4].rjust(group_name_max_char_length)} "\
-      "#{file_detail[5].to_s.rjust(file_size_max_char_length)} "\
-      "#{file_detail[6].strftime('%b %e %R')} "\
-      "#{file_detail[7]}\n"
-  end
+  result = parsed_file_list.map { |file| fetch_file_details(file, max_length_hash) }
+  result << file_list.map { |file| fetch_file_details(file, max_length_hash) }
   result
+end
+
+def fetch_file_details(file, max_length_hash)
+  stat = File::Stat.new(file)
+  # statの1ブロック単位は512byte
+  # lsコマンドでの1ブロック単位1024byteに合わせるため2で割る
+  max_length_hash[:total_blocks] += stat.blocks / 2
+  max_length_hash[:link_max_char_length] = return_larger(stat.nlink.to_s.length, max_length_hash[:link_max_char_length])
+  max_length_hash[:user_name_max_char_length] = return_larger(Etc.getpwuid(stat.uid).name.to_s.length, max_length_hash[:user_name_max_char_length])
+  max_length_hash[:group_name_max_char_length] = return_larger(Etc.getgrgid(stat.gid).name.to_s.length, max_length_hash[:group_name_max_char_length])
+  max_length_hash[:file_size_max_char_length] = return_larger(stat.size.to_s.length, max_length_hash[:file_size_max_char_length])
+  max_length_hash[:file_name_max_char_length] = return_larger(file.length, max_length_hash[:file_name_max_char_length])
+
+  [TYPE_LIST[stat.ftype.to_sym],
+   get_file_mode(stat),
+   stat.nlink,
+   Etc.getpwuid(stat.uid).name,
+   Etc.getgrgid(stat.gid).name,
+   stat.size,
+   stat.mtime,
+   file,
+   max_length_hash]
+end
+
+def list_long_format_list_to_display(file_details, max_length_hash)
+  file_details.map do |file_detail|
+    "#{file_detail[0]}#{file_detail[1]} "\
+    "#{file_detail[2].to_s.rjust(max_length_hash[:link_max_char_length])} "\
+    "#{file_detail[3].rjust(max_length_hash[:user_name_max_char_length])} "\
+    "#{file_detail[4].rjust(max_length_hash[:group_name_max_char_length])} "\
+    "#{file_detail[5].to_s.rjust(max_length_hash[:file_size_max_char_length])} "\
+    "#{file_detail[6].strftime('%b %e %R')} "\
+    "#{file_detail[7]}\n"
+  end
 end
 
 def return_larger(num1, num2)
@@ -170,7 +183,7 @@ end
 
 paths, options = parse_option
 if options[:l]
-  puts make_long_format_list(options, paths)
+  puts make_long_format_list(paths)
 else
   puts make_display_list(paths, options)
 end
