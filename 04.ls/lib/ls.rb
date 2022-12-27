@@ -63,7 +63,6 @@ end
 
 def parse_option
   opt = OptionParser.new
-  # TODO: オプションの説明追加
   opt.on('-a', '.で始まる要素も表示します')
   opt.on('-r', '逆順でソートして表示します')
   opt.on('-l', 'ファイルやディレクトリの詳細なリストを表示します')
@@ -73,11 +72,8 @@ def parse_option
   [ARGV, options]
 end
 
-def make_display_list(parse_result)
+def make_display_list(paths, options)
   result = []
-  paths, options = parse_result
-  return make_long_format_list(options, paths) if options[:l]
-
   flag = options[:a] ? File::FNM_DOTMATCH : 0
   if paths == []
     file_list = Dir.glob('*', base: Dir.pwd, flags: flag).sort
@@ -172,4 +168,9 @@ def get_file_mode(stat)
   result
 end
 
-puts make_display_list(parse_option)
+paths, options = parse_option
+if options[:l]
+  puts make_long_format_list(options, paths)
+else
+  puts make_display_list(paths, options)
+end
