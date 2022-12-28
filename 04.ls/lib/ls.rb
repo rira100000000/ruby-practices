@@ -122,31 +122,21 @@ def make_long_format_list(paths, options)
     file_list = Dir.glob('*', base: Dir.pwd).sort
     result = list_long_format_list_to_display(file_list.map { |file| fetch_file_details(file, max_length_hash) }, max_length_hash)
     result.unshift("total #{max_length_hash[:total_blocks]}")
-    return result
+    result
   else
     result = +''
     parsed_file_list = list_file_paths(paths, options[:r])
-    file_details = parsed_file_list.map { |file|fetch_file_details(file, max_length_hash) }
+    file_details = parsed_file_list.map { |file| fetch_file_details(file, max_length_hash) }
     long_format_file_list = list_long_format_list_to_display(file_details, max_length_hash)
-    long_format_file_list.each { |file| result << file}
+    long_format_file_list.each { |file| result << file }
     result << "\n"
-
-    parsed_directory_list = list_parsed_directory_paths(paths)
-    parsed_directory_list.each do |directory|
-      max_length_hash = reset_max_length_hash
-      file_list = Dir.glob('*', base: directory).sort
-      long_format_list = list_long_format_list_to_display(file_list.map { |file| fetch_file_details("#{file}", max_length_hash, directory) }, max_length_hash)
-      total_block = max_length_hash[:total_blocks].to_i
-      long_format_list.unshift("#{directory}:\ntotal #{total_block} \n")
-      long_format_list.each{ |file| result << file}
-      result << "\n"
-    end
+    result << fetch_directory_details(paths)
     # 最終行の空行は削除してリターン
-    return result[..-2]
+    result[..-2]
   end
 end
 
-def reset_max_length_hash()
+def reset_max_length_hash
   { total_blocks: 0,
     link_max_char_length: 0,
     user_name_max_char_length: 0,
@@ -155,13 +145,27 @@ def reset_max_length_hash()
     file_name_max_char_length: 0 }
 end
 
-
-def fetch_file_details(file, max_length_hash,directory = '')
-  if directory ==''
-    stat = File::Stat.new(file)
-  else
-    stat = File::Stat.new("#{directory}/#{file}")
+def fetch_directory_details(paths)
+  parsed_directory_list = list_parsed_directory_paths(paths)
+  result = +''
+  parsed_directory_list.each do |directory|
+    max_length_hash = reset_max_length_hash
+    file_list = Dir.glob('*', base: directory).sort
+    long_format_list = list_long_format_list_to_display(file_list.map { |file| fetch_file_details(file.to_s, max_length_hash, directory) }, max_length_hash)
+    total_block = max_length_hash[:total_blocks].to_i
+    long_format_list.unshift("#{directory}:\ntotal #{total_block} \n")
+    long_format_list.each { |file| result << file }
+    result << "\n"
   end
+  result
+end
+
+def fetch_file_details(file, max_length_hash, directory = '')
+  stat = if directory == ''
+           File::Stat.new(file)
+         else
+           File::Stat.new("#{directory}/#{file}")
+         end
   # statの1ブロック単位は512byte
   # lsコマンドでの1ブロック単位1024byteに合わせるため2で割る
   max_length_hash[:total_blocks] += stat.blocks / 2
@@ -207,7 +211,7 @@ def get_file_mode(stat)
   result
 end
 
-def main()
+def main
   paths, options = parse_option
   if options[:l]
     puts make_long_format_list(paths, options)
