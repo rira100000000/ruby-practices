@@ -169,11 +169,11 @@ def fetch_file_details(file, max_length_hash, directory = '')
   # statの1ブロック単位は512byte
   # lsコマンドでの1ブロック単位1024byteに合わせるため2で割る
   max_length_hash[:total_blocks] += stat.blocks / 2
-  max_length_hash[:link_max_char_length] = return_larger(stat.nlink.to_s.length, max_length_hash[:link_max_char_length])
-  max_length_hash[:user_name_max_char_length] = return_larger(Etc.getpwuid(stat.uid).name.to_s.length, max_length_hash[:user_name_max_char_length])
-  max_length_hash[:group_name_max_char_length] = return_larger(Etc.getgrgid(stat.gid).name.to_s.length, max_length_hash[:group_name_max_char_length])
-  max_length_hash[:file_size_max_char_length] = return_larger(stat.size.to_s.length, max_length_hash[:file_size_max_char_length])
-  max_length_hash[:file_name_max_char_length] = return_larger(file.length, max_length_hash[:file_name_max_char_length])
+  max_length_hash[:link_max_char_length] = [stat.nlink.to_s.length, max_length_hash[:link_max_char_length]].max
+  max_length_hash[:user_name_max_char_length] = [Etc.getpwuid(stat.uid).name.to_s.length, max_length_hash[:user_name_max_char_length]].max
+  max_length_hash[:group_name_max_char_length] = [Etc.getgrgid(stat.gid).name.to_s.length, max_length_hash[:group_name_max_char_length]].max
+  max_length_hash[:file_size_max_char_length] = [stat.size.to_s.length, max_length_hash[:file_size_max_char_length]].max
+  max_length_hash[:file_name_max_char_length] = [file.length, max_length_hash[:file_name_max_char_length]].max
 
   [TYPE_LIST[stat.ftype.to_sym],
    get_file_mode(stat),
@@ -196,10 +196,6 @@ def list_long_format_list_to_display(file_details, max_length_hash)
     "#{file_detail[6].strftime('%b %e %R')} "\
     "#{file_detail[7]}\n"
   end
-end
-
-def return_larger(num1, num2)
-  num1 >= num2 ? num1 : num2
 end
 
 def get_file_mode(stat)
