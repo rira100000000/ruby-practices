@@ -146,7 +146,7 @@ def reset_max_length_hash
     file_name_max_char_length: 0 }
 end
 
-def fetch_directory_details(paths, need_reverse_order , need_hideen_file)
+def fetch_directory_details(paths, need_reverse_order, need_hideen_file)
   parsed_directory_list = list_parsed_directory_paths(paths)
   parsed_directory_list.reverse! if need_reverse_order
   flag = need_hideen_file ? File::FNM_DOTMATCH : 0
