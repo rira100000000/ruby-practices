@@ -3,9 +3,30 @@
 
 require 'debug'
 require 'optparse'
+require 'etc'
 
 COLUMNS = 3
 SPACE_FOR_COLUMNS = 2
+TYPE_LIST = {
+  file: '-',
+  directory: 'd',
+  characterSpecial: 'c',
+  blockSpecial: 'b',
+  fifo: 'p',
+  link: 'l',
+  socket: 's'
+}.freeze
+
+MODE_LIST = {
+  7 => 'rwx',
+  6 => 'rw-',
+  5 => 'r-x',
+  4 => 'r--',
+  3 => '-wx',
+  2 => '-w-',
+  1 => '--x',
+  0 => '---'
+}.freeze
 
 def adjust_list_to_display(files)
   rows = (files.size.to_f / COLUMNS).ceil
@@ -42,19 +63,17 @@ end
 
 def parse_option
   opt = OptionParser.new
-  # TODO: オプションの説明追加
   opt.on('-a', '.で始まる要素も表示します')
   opt.on('-r', '逆順でソートして表示します')
-  opt.on('-l', '今後対応予定')
+  opt.on('-l', 'ファイルやディレクトリの詳細なリストを表示します')
   opt.banner = 'Usage: ls [-a][-r][-l]'
   options = {}
   opt.parse!(ARGV, into: options)
   [ARGV, options]
 end
 
-def make_display_list(parse_result)
+def make_display_list(paths, options)
   result = []
-  paths, options = parse_result
   flag = options[:a] ? File::FNM_DOTMATCH : 0
   if paths == []
     file_list = Dir.glob('*', base: Dir.pwd, flags: flag).sort
@@ -92,4 +111,109 @@ def list_file_paths(paths, need_reverse_order)
   need_reverse_order ? result.reverse! : result
 end
 
-puts make_display_list(parse_option)
+def list_parsed_directory_paths(paths)
+  paths.select { |path| File::Stat.new(path).directory? }.sort
+end
+
+def make_long_format_list(paths, options)
+  max_length_hash = reset_max_length_hash
+
+  if paths == []
+    file_list = Dir.glob('*', base: Dir.pwd).sort
+    result = list_long_format_list_to_display(file_list.map { |file| fetch_file_details(file, max_length_hash) }, max_length_hash)
+    result.unshift("total #{max_length_hash[:total_blocks]}")
+    result
+  else
+    result = +''
+    parsed_file_list = list_file_paths(paths, options[:r])
+    file_details = parsed_file_list.map { |file| fetch_file_details(file, max_length_hash) }
+    long_format_file_list = list_long_format_list_to_display(file_details, max_length_hash)
+    long_format_file_list.each { |file| result << file }
+    result << "\n"
+    result << fetch_directory_details(paths)
+    # 最終行の空行は削除してリターン
+    result[..-2]
+  end
+end
+
+def reset_max_length_hash
+  { total_blocks: 0,
+    link_max_char_length: 0,
+    user_name_max_char_length: 0,
+    group_name_max_char_length: 0,
+    file_size_max_char_length: 0,
+    file_name_max_char_length: 0 }
+end
+
+def fetch_directory_details(paths)
+  parsed_directory_list = list_parsed_directory_paths(paths)
+  result = +''
+  parsed_directory_list.each do |directory|
+    max_length_hash = reset_max_length_hash
+    file_list = Dir.glob('*', base: directory).sort
+    long_format_list = list_long_format_list_to_display(file_list.map { |file| fetch_file_details(file.to_s, max_length_hash, directory) }, max_length_hash)
+    total_block = max_length_hash[:total_blocks].to_i
+    long_format_list.unshift("#{directory}:\ntotal #{total_block} \n")
+    long_format_list.each { |file| result << file }
+    result << "\n"
+  end
+  result
+end
+
+def fetch_file_details(file, max_length_hash, directory = '')
+  stat = if directory == ''
+           File::Stat.new(file)
+         else
+           File::Stat.new("#{directory}/#{file}")
+         end
+  # statの1ブロック単位は512byte
+  # lsコマンドでの1ブロック単位1024byteに合わせるため2で割る
+  max_length_hash[:total_blocks] += stat.blocks / 2
+  max_length_hash[:link_max_char_length] = [stat.nlink.to_s.length, max_length_hash[:link_max_char_length]].max
+  max_length_hash[:user_name_max_char_length] = [Etc.getpwuid(stat.uid).name.to_s.length, max_length_hash[:user_name_max_char_length]].max
+  max_length_hash[:group_name_max_char_length] = [Etc.getgrgid(stat.gid).name.to_s.length, max_length_hash[:group_name_max_char_length]].max
+  max_length_hash[:file_size_max_char_length] = [stat.size.to_s.length, max_length_hash[:file_size_max_char_length]].max
+  max_length_hash[:file_name_max_char_length] = [file.length, max_length_hash[:file_name_max_char_length]].max
+
+  [TYPE_LIST[stat.ftype.to_sym],
+   get_file_mode(stat),
+   stat.nlink,
+   Etc.getpwuid(stat.uid).name,
+   Etc.getgrgid(stat.gid).name,
+   stat.size,
+   stat.mtime,
+   file,
+   max_length_hash]
+end
+
+def list_long_format_list_to_display(file_details, max_length_hash)
+  file_details.map do |file_detail|
+    "#{file_detail[0]}#{file_detail[1]} "\
+    "#{file_detail[2].to_s.rjust(max_length_hash[:link_max_char_length])} "\
+    "#{file_detail[3].rjust(max_length_hash[:user_name_max_char_length])} "\
+    "#{file_detail[4].rjust(max_length_hash[:group_name_max_char_length])} "\
+    "#{file_detail[5].to_s.rjust(max_length_hash[:file_size_max_char_length])} "\
+    "#{file_detail[6].strftime('%b %e %R')} "\
+    "#{file_detail[7]}\n"
+  end
+end
+
+def get_file_mode(stat)
+  result = +''
+  mode = stat.mode.to_s(8)[-3..]
+  mode.each_char do |char|
+    result << MODE_LIST[char.to_i]
+  end
+  result
+end
+
+def main
+  paths, options = parse_option
+  if options[:l]
+    puts make_long_format_list(paths, options)
+  else
+    puts make_display_list(paths, options)
+  end
+end
+
+main
