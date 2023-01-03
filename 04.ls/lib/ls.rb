@@ -120,6 +120,7 @@ def make_long_format_list(paths, options)
   flag = options[:a] ? File::FNM_DOTMATCH : 0
   if paths == []
     file_list = Dir.glob('*', base: Dir.pwd, flags: flag).sort
+    file_list.reverse! if options[:r]
     result = list_long_format_list_to_display(file_list.map { |file| fetch_file_details(file, max_length_hash) }, max_length_hash)
     result.unshift("total #{max_length_hash[:total_blocks]}")
     result
@@ -130,7 +131,7 @@ def make_long_format_list(paths, options)
     long_format_file_list = list_long_format_list_to_display(file_details, max_length_hash)
     long_format_file_list.each { |file| result << file }
     result << "\n"
-    result << fetch_directory_details(paths)
+    result << fetch_directory_details(paths, options[:r], options[:a])
     # 最終行の空行は削除してリターン
     result[..-2]
   end
@@ -145,12 +146,15 @@ def reset_max_length_hash
     file_name_max_char_length: 0 }
 end
 
-def fetch_directory_details(paths)
+def fetch_directory_details(paths, need_reverse_order , need_hideen_file)
   parsed_directory_list = list_parsed_directory_paths(paths)
+  parsed_directory_list.reverse! if need_reverse_order
+  flag = need_hideen_file ? File::FNM_DOTMATCH : 0
   result = +''
   parsed_directory_list.each do |directory|
     max_length_hash = reset_max_length_hash
-    file_list = Dir.glob('*', base: directory).sort
+    file_list = Dir.glob('*', base: directory, flags: flag).sort
+    file_list.reverse! if need_reverse_order
     long_format_list = list_long_format_list_to_display(file_list.map { |file| fetch_file_details(file.to_s, max_length_hash, directory) }, max_length_hash)
     total_block = max_length_hash[:total_blocks].to_i
     long_format_list.unshift("#{directory}:\ntotal #{total_block} \n")

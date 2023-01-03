@@ -190,7 +190,7 @@ class ListTest < Minitest::Test
     true_str =
       "total 24\n"\
       "-rw-r--r-- 1 rira rira    0 Nov 22 10:03 00_file\n"\
-      "drwxr-xr-x 2 rira rira 4096 Nov 22 10:03 00dir\n"\
+      "drwxr-xr-x 3 rira rira 4096 Jan  3 17:19 00dir\n"\
       "-rw-r--r-- 1 rira rira    0 Nov 22 10:03 01_file\n"\
       "drwxr-xr-x 2 rira rira 4096 Nov 22 15:15 01dir\n"\
       "-rw-r--r-- 1 rira rira    0 Nov 22 10:03 02_file\n"\
@@ -262,7 +262,7 @@ class ListTest < Minitest::Test
       "-rw-r--r-- 1 rira rira    0 Dec 14 14:37 .file\n"\
       "-rw-r--r-- 1 rira rira    0 Dec 14 15:20 .file2\n"\
       "-rw-r--r-- 1 rira rira    0 Nov 22 10:03 00_file\n"\
-      "drwxr-xr-x 2 rira rira 4096 Nov 22 10:03 00dir\n"\
+      "drwxr-xr-x 3 rira rira 4096 Jan  3 17:19 00dir\n"\
       "-rw-r--r-- 1 rira rira    0 Nov 22 10:03 01_file\n"\
       "drwxr-xr-x 2 rira rira 4096 Nov 22 15:15 01dir\n"\
       "-rw-r--r-- 1 rira rira    0 Nov 22 10:03 02_file\n"\
@@ -288,6 +288,87 @@ class ListTest < Minitest::Test
       "-rw-r--r-- 1 rira rira    0 Nov 22 10:03 19_file\n"\
       "-rw-r--r-- 1 rira rira    0 Nov 23 09:32 attr_file\n"\
       "-rw-r--r-- 1 rira rira  233 Nov 22 11:36 make_test_file.rb\n"
+    assert_equal true_str, output
+    Dir.chdir(current_dir)
+  end
+
+  def test_dir_list_display_with_option_l_and_r
+    current_dir = Dir.pwd
+    Dir.chdir(test_data_dir)
+    ls_path = "#{__dir__.sub!(%r{/test$}, '')}/lib/ls.rb"
+    output = `ruby #{ls_path} -lr`
+    true_str =
+      "total 24\n"\
+      "-rw-r--r-- 1 rira rira  233 Nov 22 11:36 make_test_file.rb\n"\
+      "-rw-r--r-- 1 rira rira    0 Nov 23 09:32 attr_file\n"\
+      "-rw-r--r-- 1 rira rira    0 Nov 22 10:03 19_file\n"\
+      "-rw-r--r-- 1 rira rira    0 Nov 22 10:03 18_file\n"\
+      "-rw-r--r-- 1 rira rira    0 Nov 22 10:03 17_file\n"\
+      "-rw-r--r-- 1 rira rira    0 Nov 22 10:03 16_file\n"\
+      "-rw-r--r-- 1 rira rira    0 Nov 22 10:03 15_file\n"\
+      "-rw-r--r-- 1 rira rira    0 Nov 22 10:03 14_file\n"\
+      "-rw-r--r-- 1 rira rira    0 Nov 22 10:03 13_file\n"\
+      "-rw-r--r-- 1 rira rira    0 Nov 22 10:03 12_file\n"\
+      "-rw-r--r-- 1 rira rira    0 Nov 22 10:03 11_file\n"\
+      "-rw-r--r-- 1 rira rira    0 Nov 22 14:54 10_file\n"\
+      "-rw-r--r-- 1 rira rira    0 Nov 22 10:03 09_file\n"\
+      "-rw-r--r-- 1 rira rira    0 Nov 22 10:03 08_file\n"\
+      "-rw-r--r-- 1 rira rira    0 Nov 22 10:03 07_file\n"\
+      "-rw-r--r-- 1 rira rira    0 Nov 22 10:03 06_file\n"\
+      "-rw-r--r-- 1 rira rira    0 Nov 22 10:03 05_file\n"\
+      "drwxr-xr-x 3 rira rira 4096 Nov 22 14:30 04dir\n"\
+      "-rw-r--r-- 1 rira rira    0 Nov 22 10:03 04_file\n"\
+      "drwxr-xr-x 2 rira rira 4096 Nov 22 14:37 03dir\n"\
+      "-rw-r--r-- 1 rira rira    0 Nov 22 10:03 03_file\n"\
+      "drwxr-xr-x 2 rira rira 4096 Nov 22 16:37 02dir\n"\
+      "-rw-r--r-- 1 rira rira    0 Nov 22 10:03 02_file\n"\
+      "drwxr-xr-x 2 rira rira 4096 Nov 22 15:15 01dir\n"\
+      "-rw-r--r-- 1 rira rira    0 Nov 22 10:03 01_file\n"\
+      "drwxr-xr-x 3 rira rira 4096 Jan  3 17:19 00dir\n"\
+      "-rw-r--r-- 1 rira rira    0 Nov 22 10:03 00_file\n"
+    assert_equal true_str, output
+    Dir.chdir(current_dir)
+  end
+
+  def test_dir_list_display_with_option_l_and_r_and_a
+    current_dir = Dir.pwd
+    Dir.chdir(test_data_dir)
+    ls_path = "#{__dir__.sub!(%r{/test$}, '')}/lib/ls.rb"
+    output = `ruby #{ls_path} -lra`
+    true_str =
+      "total 36\n"\
+      "-rw-r--r-- 1 rira rira  233 Nov 22 11:36 make_test_file.rb\n"\
+      "-rw-r--r-- 1 rira rira    0 Nov 23 09:32 attr_file\n"\
+      "-rw-r--r-- 1 rira rira    0 Nov 22 10:03 19_file\n"\
+      "-rw-r--r-- 1 rira rira    0 Nov 22 10:03 18_file\n"\
+      "-rw-r--r-- 1 rira rira    0 Nov 22 10:03 17_file\n"\
+      "-rw-r--r-- 1 rira rira    0 Nov 22 10:03 16_file\n"\
+      "-rw-r--r-- 1 rira rira    0 Nov 22 10:03 15_file\n"\
+      "-rw-r--r-- 1 rira rira    0 Nov 22 10:03 14_file\n"\
+      "-rw-r--r-- 1 rira rira    0 Nov 22 10:03 13_file\n"\
+      "-rw-r--r-- 1 rira rira    0 Nov 22 10:03 12_file\n"\
+      "-rw-r--r-- 1 rira rira    0 Nov 22 10:03 11_file\n"\
+      "-rw-r--r-- 1 rira rira    0 Nov 22 14:54 10_file\n"\
+      "-rw-r--r-- 1 rira rira    0 Nov 22 10:03 09_file\n"\
+      "-rw-r--r-- 1 rira rira    0 Nov 22 10:03 08_file\n"\
+      "-rw-r--r-- 1 rira rira    0 Nov 22 10:03 07_file\n"\
+      "-rw-r--r-- 1 rira rira    0 Nov 22 10:03 06_file\n"\
+      "-rw-r--r-- 1 rira rira    0 Nov 22 10:03 05_file\n"\
+      "drwxr-xr-x 3 rira rira 4096 Nov 22 14:30 04dir\n"\
+      "-rw-r--r-- 1 rira rira    0 Nov 22 10:03 04_file\n"\
+      "drwxr-xr-x 2 rira rira 4096 Nov 22 14:37 03dir\n"\
+      "-rw-r--r-- 1 rira rira    0 Nov 22 10:03 03_file\n"\
+      "drwxr-xr-x 2 rira rira 4096 Nov 22 16:37 02dir\n"\
+      "-rw-r--r-- 1 rira rira    0 Nov 22 10:03 02_file\n"\
+      "drwxr-xr-x 2 rira rira 4096 Nov 22 15:15 01dir\n"\
+      "-rw-r--r-- 1 rira rira    0 Nov 22 10:03 01_file\n"\
+      "drwxr-xr-x 3 rira rira 4096 Jan  3 17:19 00dir\n"\
+      "-rw-r--r-- 1 rira rira    0 Nov 22 10:03 00_file\n"\
+      "-rw-r--r-- 1 rira rira    0 Dec 14 15:20 .file2\n"\
+      "-rw-r--r-- 1 rira rira    0 Dec 14 14:37 .file\n"\
+      "drwxr-xr-x 2 rira rira 4096 Dec 14 15:20 .dir2\n"\
+      "drwxr-xr-x 2 rira rira 4096 Dec 14 14:29 .dir\n"\
+      "drwxr-xr-x 9 rira rira 4096 Dec 14 15:20 .\n"
     assert_equal true_str, output
     Dir.chdir(current_dir)
   end
