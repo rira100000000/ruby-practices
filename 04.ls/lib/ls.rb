@@ -117,9 +117,9 @@ end
 
 def make_long_format_list(paths, options)
   max_length_hash = reset_max_length_hash
-
+  flag = options[:a] ? File::FNM_DOTMATCH : 0
   if paths == []
-    file_list = Dir.glob('*', base: Dir.pwd).sort
+    file_list = Dir.glob('*', base: Dir.pwd, flags: flag).sort
     result = list_long_format_list_to_display(file_list.map { |file| fetch_file_details(file, max_length_hash) }, max_length_hash)
     result.unshift("total #{max_length_hash[:total_blocks]}")
     result
