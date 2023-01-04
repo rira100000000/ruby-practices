@@ -1,0 +1,12 @@
+abcde abcde abcde
+あいうえお あいうえお
+ 
+	abcde abcde abcde
+あいうえお あいうえお
+   aaa   bbb ccc
+a	 b 	  c  a	
+
+
+
+
+ aaa  	
