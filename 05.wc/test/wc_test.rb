@@ -3,7 +3,7 @@
 require 'minitest/autorun'
 require_relative '../lib/wc'
 
-class Word_Count_Test < Minitest::Test
+class WordCountTest < Minitest::Test
   attr_reader :test_data_dir, :current_dir, :wc_path
 
   def setup
@@ -26,9 +26,9 @@ class Word_Count_Test < Minitest::Test
   def test_multiple_files_exist
     output = `ruby #{wc_path} 01_file.txt 03_file.txt`
     expected_str =
-    "   12  18 146 01_file.txt\n"\
-    "   99  99 198 03_file.txt\n"\
-    "  111 117 344 total\n"
+      "   12  18 146 01_file.txt\n"\
+      "   99  99 198 03_file.txt\n"\
+      "  111 117 344 total\n"
     assert_equal output, expected_str
   end
 
@@ -40,7 +40,7 @@ class Word_Count_Test < Minitest::Test
 
   def test_specified_directory
     output = `ruby #{wc_path} 00_dir`
-    expected_str = 
+    expected_str =
       "wc: 00_dir: Is a directory\n"\
       "  0 0 0 00_dir\n"
     assert_equal output, expected_str

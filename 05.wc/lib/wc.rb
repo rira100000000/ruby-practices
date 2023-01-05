@@ -22,8 +22,7 @@ end
 
 def count_words(path)
   str = File.read(path)
-  number_of_words = str.scan(/[\n\t 　]+/).length
-  number_of_words
+  str.scan(/[\n\t 　]+/).length
 end
 
 def count_bytes(path)
@@ -55,9 +54,9 @@ def make_display_line(count_list, max_length_hash, total_hash)
       " #{counts[:number_of_words].to_s.rjust(max_length_hash[:words_max_number_of_digits])}"\
       " #{counts[:number_of_bytes].to_s.rjust(max_length_hash[:bytes_max_number_of_digits])}"\
       " #{counts[:path]}"
-    end  
+    end
   end
-  result << "  #{total_hash[:lines_total]} #{total_hash[:words_total]} #{total_hash[:bytes_total]} total" if result.length > 1 
+  result << "  #{total_hash[:lines_total]} #{total_hash[:words_total]} #{total_hash[:bytes_total]} total" if result.length > 1
   result
 end
 
