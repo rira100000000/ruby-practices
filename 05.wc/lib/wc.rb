@@ -36,6 +36,12 @@ def reset_max_length_hash
     bytes_max_number_of_digits: 0 }
 end
 
+def fill_counts_by_zero(counts)
+  counts[:number_of_lines] = 0
+  counts[:number_of_words] = 0
+  counts[:number_of_bytes] = 0
+end
+
 def make_display_line(count_list, max_length_hash, total_hash)
   result = count_list.map do |counts|
     if counts[:file_not_exists]
@@ -43,9 +49,7 @@ def make_display_line(count_list, max_length_hash, total_hash)
     else
       display_str = +''
       if counts[:directory]
-        counts[:number_of_lines] = 0
-        counts[:number_of_words] = 0
-        counts[:number_of_bytes] = 0
+        fill_counts_by_zero(counts)
         display_str = +"#{counts[:directory]}\n"
       elsif counts[:not_file]
         next display_str = +"#{counts[:not_file]}\n"
@@ -60,6 +64,20 @@ def make_display_line(count_list, max_length_hash, total_hash)
   result
 end
 
+def fill_count_list(count_list, index, path)
+  count_list[index][:number_of_lines] = count_lines(path)
+  count_list[index][:number_of_words] = count_words(path)
+  count_list[index][:number_of_bytes] = count_bytes(path)
+  count_list
+end
+
+def fill_total_hash(total_hash, count_list, index)
+  total_hash[:lines_total] += count_list[index][:number_of_lines]
+  total_hash[:words_total] += count_list[index][:number_of_words]
+  total_hash[:bytes_total] += count_list[index][:number_of_bytes]
+  total_hash
+end
+
 def print_all_count(paths)
   max_length_hash = reset_max_length_hash
   count_list = []
@@ -70,12 +88,8 @@ def print_all_count(paths)
     if File.directory?(path)
       count_list[index][:directory] = "wc: #{path}: Is a directory"
     elsif File.exist?(path)
-      count_list[index][:number_of_lines] = count_lines(path)
-      count_list[index][:number_of_words] = count_words(path)
-      count_list[index][:number_of_bytes] = count_bytes(path)
-      total_hash[:lines_total] += count_list[index][:number_of_lines]
-      total_hash[:words_total] += count_list[index][:number_of_words]
-      total_hash[:bytes_total] += count_list[index][:number_of_bytes]
+      count_list = fill_count_list(count_list, index, path)
+      total_hash = fill_total_hash(total_hash, count_list, index)
     else
       count_list[index][:not_file] = "wc: #{path}: No such file or directory"
     end
