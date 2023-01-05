@@ -31,4 +31,18 @@ class Word_Count_Test < Minitest::Test
     "  111 117 344 total\n"
     assert_equal output, expected_str
   end
+
+  def test_file_not_exists
+    output = `ruby #{wc_path} not_exist_file`
+    expected_str = "wc: not_exist_file: No such file or directory\n"
+    assert_equal output, expected_str
+  end
+
+  def test_specified_directory
+    output = `ruby #{wc_path} 00_dir`
+    expected_str = 
+      "wc: 00_dir: Is a directory\n"\
+      "  0 0 0 00_dir\n"
+    assert_equal output, expected_str
+  end
 end
