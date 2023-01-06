@@ -63,4 +63,10 @@ class WordCountTest < Minitest::Test
     expected_str = "  12 18 146 01_file.txt\n"
     assert_equal output, expected_str
   end
+
+  def test_pipe_exist
+    output = `ls -l 00_dir | ruby #{wc_path}`
+    expected_str = "  3 20 112\n"
+    assert_equal output, expected_str
+  end
 end

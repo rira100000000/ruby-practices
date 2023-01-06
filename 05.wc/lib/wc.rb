@@ -15,13 +15,11 @@ def parse_option
   [ARGV, options]
 end
 
-def count_lines(path)
-  str = File.read(path)
+def count_lines(str)
   str.lines.count
 end
 
-def count_words(path)
-  str = File.read(path)
+def count_words(str)
   str.scan(/[\n\t 　]+/).length
 end
 
@@ -78,8 +76,9 @@ def make_display_str(counts_list, max_length_hash, total_hash, options)
 end
 
 def fill_count_list(count_list, index, path)
-  count_list[index][:number_of_lines] = count_lines(path)
-  count_list[index][:number_of_words] = count_words(path)
+  str = File.read(path)
+  count_list[index][:number_of_lines] = count_lines(str)
+  count_list[index][:number_of_words] = count_words(str)
   count_list[index][:number_of_bytes] = count_bytes(path)
   count_list
 end
@@ -113,14 +112,32 @@ def print_count(paths, options)
   puts make_display_str(count_list, max_length_hash, total_hash, options)
 end
 
+def print_standard_input_count(standard_input, options)
+  display_str = +' '
+  display_str << " #{count_lines(standard_input)}" if options[:l]
+  display_str << " #{count_words(standard_input)}" if options[:w]
+  display_str << " #{standard_input.bytesize}" if options[:c]
+  puts display_str
+end
+
 def main
   paths, options = parse_option
+  standard_input = +''
+  if File.pipe?($stdin)
+    while (line = gets)
+      standard_input << line
+    end
+  end
   if options == {}
     options[:l] = true
     options[:w] = true
     options[:c] = true
   end
-  print_count(paths, options)
+  if paths != []
+    print_count(paths, options)
+  elsif standard_input != ''
+    print_standard_input_count(standard_input, options)
+  end
 end
 
 main
