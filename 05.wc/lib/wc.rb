@@ -123,9 +123,6 @@ end
 def main
   paths, options = parse_option
   standard_input = +''
-  while (line = gets)
-    standard_input << line
-  end
   if options == {}
     options[:l] = true
     options[:w] = true
@@ -133,9 +130,13 @@ def main
   end
   if paths != []
     print_count(paths, options)
-  elsif standard_input != ''
+  else
+    while (line = gets)
+      standard_input << line
+    end
     print_standard_input_count(standard_input, options)
   end
 end
 
-main
+main if $PROGRAM_NAME == __FILE__
+
