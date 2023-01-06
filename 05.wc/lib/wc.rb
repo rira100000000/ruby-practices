@@ -123,10 +123,8 @@ end
 def main
   paths, options = parse_option
   standard_input = +''
-  if File.pipe?($stdin)
-    while (line = gets)
-      standard_input << line
-    end
+  while (line = gets)
+    standard_input << line
   end
   if options == {}
     options[:l] = true
