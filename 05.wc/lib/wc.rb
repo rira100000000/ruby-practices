@@ -42,8 +42,24 @@ def fill_counts_by_zero(counts)
   counts[:number_of_bytes] = 0
 end
 
-def make_display_line(count_list, max_length_hash, total_hash)
-  result = count_list.map do |counts|
+def make_display_line(counts, max_length_hash, options)
+  display_str = +' '
+  display_str << " #{counts[:number_of_lines].to_s.rjust(max_length_hash[:lines_max_number_of_digits])}" if options[:l]
+  display_str << " #{counts[:number_of_words].to_s.rjust(max_length_hash[:words_max_number_of_digits])}" if options[:w]
+  display_str << " #{counts[:number_of_bytes].to_s.rjust(max_length_hash[:bytes_max_number_of_digits])}" if options[:c]
+  display_str << " #{counts[:path]}"
+end
+
+def make_display_total_line(total_hash, options)
+  result = +' '
+  result << " #{total_hash[:lines_total]}" if options[:l]
+  result << " #{total_hash[:words_total]}" if options[:w]
+  result << " #{total_hash[:bytes_total]}" if options[:c]
+  result << ' total'
+end
+
+def make_display_str(counts_list, max_length_hash, total_hash, options)
+  result = counts_list.map do |counts|
     if counts[:file_not_exists]
       counts[:file_not_exists]
     else
@@ -54,13 +70,10 @@ def make_display_line(count_list, max_length_hash, total_hash)
       elsif counts[:not_file]
         next display_str = +"#{counts[:not_file]}\n"
       end
-      display_str << "  #{counts[:number_of_lines].to_s.rjust(max_length_hash[:lines_max_number_of_digits])}"\
-      " #{counts[:number_of_words].to_s.rjust(max_length_hash[:words_max_number_of_digits])}"\
-      " #{counts[:number_of_bytes].to_s.rjust(max_length_hash[:bytes_max_number_of_digits])}"\
-      " #{counts[:path]}"
+      display_str << make_display_line(counts, max_length_hash, options)
     end
   end
-  result << "  #{total_hash[:lines_total]} #{total_hash[:words_total]} #{total_hash[:bytes_total]} total" if result.length > 1
+  result << make_display_total_line(total_hash, options) if result.length > 1
   result
 end
 
@@ -78,7 +91,7 @@ def fill_total_hash(total_hash, count_list, index)
   total_hash
 end
 
-def print_all_count(paths)
+def print_count(paths, options)
   max_length_hash = reset_max_length_hash
   count_list = []
   total_hash = { lines_total: 0, words_total: 0, bytes_total: 0 }
@@ -97,19 +110,17 @@ def print_all_count(paths)
     max_length_hash[:words_max_number_of_digits] = total_hash[:words_total].to_s.length
     max_length_hash[:bytes_max_number_of_digits] = total_hash[:bytes_total].to_s.length
   end
-  puts make_display_line(count_list, max_length_hash, total_hash)
-end
-
-def print_selected_count(paths, options)
+  puts make_display_str(count_list, max_length_hash, total_hash, options)
 end
 
 def main
   paths, options = parse_option
   if options == {}
-    print_all_count(paths)
-  else
-    print_selected_count(paths, options)
+    options[:l] = true
+    options[:w] = true
+    options[:c] = true
   end
+  print_count(paths, options)
 end
 
 main

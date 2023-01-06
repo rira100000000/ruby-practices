@@ -45,4 +45,22 @@ class WordCountTest < Minitest::Test
       "  0 0 0 00_dir\n"
     assert_equal output, expected_str
   end
+
+  def test_l_option_selected
+    output = `ruby #{wc_path} 01_file.txt -l`
+    expected_str = "  12 01_file.txt\n"
+    assert_equal output, expected_str
+  end
+
+  def test_lw_option_selected
+    output = `ruby #{wc_path} 01_file.txt -lw`
+    expected_str = "  12 18 01_file.txt\n"
+    assert_equal output, expected_str
+  end
+
+  def test_lwc_option_selected
+    output = `ruby #{wc_path} 01_file.txt -lwc`
+    expected_str = "  12 18 146 01_file.txt\n"
+    assert_equal output, expected_str
+  end
 end
