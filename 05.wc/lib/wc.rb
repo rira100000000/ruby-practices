@@ -138,4 +138,4 @@ def main
   end
 end
 
-main if $PROGRAM_NAME == __FILE_
+main if $PROGRAM_NAME == __FILE__
