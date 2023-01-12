@@ -95,10 +95,10 @@ def print_command_line_argument_count(paths, options)
     else
       count_list[index][:not_file] = "wc: #{path}: No such file or directory"
     end
-    max_length_hash[:lines_max_number_of_digits] = total_hash[:lines_total].to_s.length
-    max_length_hash[:words_max_number_of_digits] = total_hash[:words_total].to_s.length
-    max_length_hash[:bytes_max_number_of_digits] = total_hash[:bytes_total].to_s.length
   end
+  max_length_hash[:lines_max_number_of_digits] = total_hash[:lines_total].to_s.length
+  max_length_hash[:words_max_number_of_digits] = total_hash[:words_total].to_s.length
+  max_length_hash[:bytes_max_number_of_digits] = total_hash[:bytes_total].to_s.length
   puts make_display_str(count_list, max_length_hash, total_hash, options)
 end
 
