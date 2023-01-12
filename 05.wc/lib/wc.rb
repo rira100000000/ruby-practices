@@ -127,12 +127,8 @@ end
 
 def main
   paths, options = parse_option
-  standard_input = +''
   if paths.empty?
-    while (line = gets)
-      standard_input << line
-    end
-    print_standard_input_count(standard_input, options)
+    print_standard_input_count(readlines.join, options)
   else
     print_count(paths, options)    
   end
