@@ -128,13 +128,13 @@ end
 def main
   paths, options = parse_option
   standard_input = +''
-  if paths != []
-    print_count(paths, options)
-  else
+  if paths.empty?
     while (line = gets)
       standard_input << line
     end
     print_standard_input_count(standard_input, options)
+  else
+    print_count(paths, options)    
   end
 end
 
