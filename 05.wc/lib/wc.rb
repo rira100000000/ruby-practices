@@ -33,12 +33,6 @@ def count_bytes(path)
   stat.size
 end
 
-def reset_max_length_hash
-  { lines_max_number_of_digits: 0,
-    words_max_number_of_digits: 0,
-    bytes_max_number_of_digits: 0 }
-end
-
 def fill_counts_by_zero(counts)
   counts[:number_of_lines] = 0
   counts[:number_of_words] = 0
@@ -96,7 +90,7 @@ def fill_total_hash(total_hash, count_list, index)
 end
 
 def print_count(paths, options)
-  max_length_hash = reset_max_length_hash
+  max_length_hash = { lines_max_number_of_digits: 0, words_max_number_of_digits: 0, bytes_max_number_of_digits: 0 }
   count_list = []
   total_hash = { lines_total: 0, words_total: 0, bytes_total: 0 }
   paths.each_with_index do |path, index|
@@ -130,7 +124,7 @@ def main
   if paths.empty?
     print_standard_input_count(readlines.join, options)
   else
-    print_count(paths, options)    
+    print_count(paths, options)
   end
 end
 
