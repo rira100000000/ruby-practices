@@ -33,10 +33,8 @@ def count_bytes(path)
   stat.size
 end
 
-def fill_counts_by_zero(counts)
-  counts[:number_of_lines] = 0
-  counts[:number_of_words] = 0
-  counts[:number_of_bytes] = 0
+def return_zeros_for_counts
+  [0, 0, 0]
 end
 
 def make_display_line(counts, max_length_hash, options)
@@ -62,7 +60,7 @@ def make_display_str(counts_list, max_length_hash, total_hash, options)
     else
       display_str = +''
       if counts[:directory]
-        fill_counts_by_zero(counts)
+        counts[:number_of_lines], counts[:number_of_words], counts[:number_of_bytes] = *return_zeros_for_counts
         display_str = +"#{counts[:directory]}\n"
       elsif counts[:not_file]
         next display_str = +"#{counts[:not_file]}\n"
@@ -74,22 +72,19 @@ def make_display_str(counts_list, max_length_hash, total_hash, options)
   result
 end
 
-def fill_count_list(count_list, index, path)
+def return_count_list(path)
   str = File.read(path)
-  count_list[index][:number_of_lines] = count_lines(str)
-  count_list[index][:number_of_words] = count_words(str)
-  count_list[index][:number_of_bytes] = count_bytes(path)
-  count_list
+  [count_lines(str), count_words(str), count_bytes(path)]
 end
 
-def fill_total_hash(total_hash, count_list, index)
-  total_hash[:lines_total] += count_list[index][:number_of_lines]
-  total_hash[:words_total] += count_list[index][:number_of_words]
-  total_hash[:bytes_total] += count_list[index][:number_of_bytes]
-  total_hash
+def return_total_list(total_hash, count_list, index)
+  lines_total = total_hash[:lines_total] + count_list[index][:number_of_lines]
+  words_total = total_hash[:words_total] + count_list[index][:number_of_words]
+  bytes_total = total_hash[:bytes_total] + count_list[index][:number_of_bytes]
+  [lines_total, words_total, bytes_total]
 end
 
-def print_count(paths, options)
+def print_command_line_argument_count(paths, options)
   max_length_hash = { lines_max_number_of_digits: 0, words_max_number_of_digits: 0, bytes_max_number_of_digits: 0 }
   count_list = []
   total_hash = { lines_total: 0, words_total: 0, bytes_total: 0 }
@@ -99,8 +94,8 @@ def print_count(paths, options)
     if File.directory?(path)
       count_list[index][:directory] = "wc: #{path}: Is a directory"
     elsif File.exist?(path)
-      count_list = fill_count_list(count_list, index, path)
-      total_hash = fill_total_hash(total_hash, count_list, index)
+      count_list[index][:number_of_lines], count_list[index][:number_of_words], count_list[index][:number_of_bytes] = *return_count_list(path)
+      total_hash[:lines_total], total_hash[:words_total], total_hash[:bytes_total] = *return_total_list(total_hash, count_list, index)
     else
       count_list[index][:not_file] = "wc: #{path}: No such file or directory"
     end
@@ -124,7 +119,7 @@ def main
   if paths.empty?
     print_standard_input_count(readlines.join, options)
   else
-    print_count(paths, options)
+    print_command_line_argument_count(paths, options)
   end
 end
 
