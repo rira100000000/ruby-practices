@@ -11,6 +11,12 @@ def parse_option
   opt.banner = 'Usage: ls [-l][-w][-c]'
   options = {}
   opt.parse!(ARGV, into: options)
+  if options.empty?
+    options[:l] = true
+    options[:w] = true
+    options[:c] = true
+  end
+
   [ARGV, options]
 end
 
@@ -122,11 +128,6 @@ end
 def main
   paths, options = parse_option
   standard_input = +''
-  if options == {}
-    options[:l] = true
-    options[:w] = true
-    options[:c] = true
-  end
   if paths != []
     print_count(paths, options)
   else
