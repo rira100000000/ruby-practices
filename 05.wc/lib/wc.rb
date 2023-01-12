@@ -60,7 +60,6 @@ def make_display_str(counts_list, max_length_hash, total_hash, options)
     else
       display_str = +''
       if counts[:directory]
-        counts[:number_of_lines], counts[:number_of_words], counts[:number_of_bytes] = *return_zeros_for_counts
         display_str = +"#{counts[:directory]}\n"
       elsif counts[:not_file]
         next display_str = +"#{counts[:not_file]}\n"
@@ -93,6 +92,7 @@ def print_command_line_argument_count(paths, options)
     count_list[index][:path] = path
     if File.directory?(path)
       count_list[index][:directory] = "wc: #{path}: Is a directory"
+      count_list[index][:number_of_lines], count_list[index][:number_of_words], count_list[index][:number_of_bytes] = *return_zeros_for_counts
     elsif File.exist?(path)
       count_list[index][:number_of_lines], count_list[index][:number_of_words], count_list[index][:number_of_bytes] = *return_count_list(path)
       total_hash[:lines_total], total_hash[:words_total], total_hash[:bytes_total] = *return_total_list(total_hash, count_list, index)
