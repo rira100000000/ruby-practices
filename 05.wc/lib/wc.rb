@@ -55,17 +55,13 @@ end
 
 def make_display_str(counts_list, max_length_hash, total_hash, options)
   result = counts_list.map do |counts|
-    if counts[:file_not_exists]
-      counts[:file_not_exists]
-    else
-      display_str = +''
-      if counts[:directory]
-        display_str = +"#{counts[:directory]}\n"
-      elsif counts[:not_file]
-        next display_str = +"#{counts[:not_file]}\n"
-      end
-      display_str << make_display_line(counts, max_length_hash, options)
+    display_str = +''
+    if counts[:directory]
+      display_str = +"#{counts[:directory]}\n"
+    elsif counts[:not_file]
+      next display_str = +"#{counts[:not_file]}\n"
     end
+    display_str << make_display_line(counts, max_length_hash, options)
   end
   result << make_display_total_line(total_hash, options) if result.length > 1
   result
