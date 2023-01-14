@@ -68,8 +68,7 @@ def list_counts(path)
   [count_lines(str), count_words(str), count_bytes(path)]
 end
 
-def print_command_line_argument_count(paths, options)
-  max_length_hash = { lines_max_number_of_digits: 0, words_max_number_of_digits: 0, bytes_max_number_of_digits: 0 }
+def analyse_paths(paths)
   count_list = []
   total_hash = { lines_total: 0, words_total: 0, bytes_total: 0 }
   paths.each_with_index do |path, index|
@@ -89,6 +88,12 @@ def print_command_line_argument_count(paths, options)
       count_list[index][:not_file] = "wc: #{path}: No such file or directory"
     end
   end
+  [count_list, total_hash]
+end
+
+def print_command_line_argument_count(paths, options)
+  max_length_hash = { lines_max_number_of_digits: 0, words_max_number_of_digits: 0, bytes_max_number_of_digits: 0 }
+  count_list, total_hash = analyse_paths(paths)
   max_length_hash[:lines_max_number_of_digits] = total_hash[:lines_total].to_s.length
   max_length_hash[:words_max_number_of_digits] = total_hash[:words_total].to_s.length
   max_length_hash[:bytes_max_number_of_digits] = total_hash[:bytes_total].to_s.length
