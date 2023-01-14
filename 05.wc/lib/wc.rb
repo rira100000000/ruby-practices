@@ -67,7 +67,7 @@ def make_display_str(counts_list, max_length_hash, total_hash, options)
   result
 end
 
-def return_count_list(path)
+def list_counts(path)
   str = File.read(path)
   [count_lines(str), count_words(str), count_bytes(path)]
 end
@@ -90,7 +90,7 @@ def print_command_line_argument_count(paths, options)
       count_list[index][:directory] = "wc: #{path}: Is a directory"
       count_list[index][:number_of_lines], count_list[index][:number_of_words], count_list[index][:number_of_bytes] = *return_zeros_for_counts
     elsif File.exist?(path)
-      count_list[index][:number_of_lines], count_list[index][:number_of_words], count_list[index][:number_of_bytes] = *return_count_list(path)
+      count_list[index][:number_of_lines], count_list[index][:number_of_words], count_list[index][:number_of_bytes] = *list_counts(path)
       total_hash[:lines_total], total_hash[:words_total], total_hash[:bytes_total] = *return_total_list(total_hash, count_list, index)
     else
       count_list[index][:not_file] = "wc: #{path}: No such file or directory"
