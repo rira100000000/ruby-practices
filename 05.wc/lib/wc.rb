@@ -33,10 +33,6 @@ def count_bytes(path)
   stat.size
 end
 
-def return_zeros_for_counts
-  [0, 0, 0]
-end
-
 def make_display_line(counts, max_length_hash, options)
   display_str = +' '
   display_str << " #{counts[:number_of_lines].to_s.rjust(max_length_hash[:lines_max_number_of_digits])}" if options[:l]
@@ -88,7 +84,9 @@ def print_command_line_argument_count(paths, options)
     count_list[index][:path] = path
     if File.directory?(path)
       count_list[index][:directory] = "wc: #{path}: Is a directory"
-      count_list[index][:number_of_lines], count_list[index][:number_of_words], count_list[index][:number_of_bytes] = *return_zeros_for_counts
+      count_list[index][:number_of_lines] = 0
+      count_list[index][:number_of_words] = 0
+      count_list[index][:number_of_bytes] = 0
     elsif File.exist?(path)
       count_list[index][:number_of_lines], count_list[index][:number_of_words], count_list[index][:number_of_bytes] = *list_counts(path)
       total_hash[:lines_total], total_hash[:words_total], total_hash[:bytes_total] = *return_total_list(total_hash, count_list, index)
