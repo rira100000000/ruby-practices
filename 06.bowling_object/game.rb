@@ -14,29 +14,19 @@ class Game
     frames = []
     index = 0
     10.times.each do
-      frame_scores = []
-      frame_scores << @scores[index]
-      frame_scores << @scores[index + 1]
+      frame = Frame.new(@scores[index], @scores[index + 1])
 
-      if @scores[index] == 10
-        frame_scores << @scores[index + 2]
+      if frame.strike?
+        frame.add_bonus_score(@scores[index + 2])
         index += 1
-      elsif spare?(@scores[index], @scores[index + 1])
-        frame_scores << @scores[index + 2]
+      elsif frame.spare?
+        frame.add_bonus_score(@scores[index + 2])
         index += 2
       else
         index += 2
       end
-      frames << Frame.new(frame_scores).frame_score
+      frames << frame.calc_frame
     end
     frames
-  end
-
-  def spare?(score, next_score)
-    if next_score.nil?
-      false
-    elsif score + next_score == 10
-      true
-    end
   end
 end
