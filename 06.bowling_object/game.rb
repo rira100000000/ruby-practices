@@ -11,10 +11,6 @@ class Game
   end
 
   def calc_game
-    split_frame
-  end
-
-  def split_frame
     frames = []
     index = 0
     10.times.each do

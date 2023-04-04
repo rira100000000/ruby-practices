@@ -12,8 +12,7 @@ class Frame
 
   def calc_frame(shots)
     shots.sum do |shot|
-      one_shot = Shot.new(shot)
-      one_shot.score
+      Shot.new(shot).score
     end
   end
 end
