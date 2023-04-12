@@ -10,7 +10,7 @@ class Game
     end
   end
 
-  def calc_game
+  def calc_all_frames
     frames = []
     index = 0
     10.times.each do
@@ -25,7 +25,7 @@ class Game
       else
         index += 2
       end
-      frames << frame.calc_frame
+      frames << frame.calc_scores
     end
     frames
   end

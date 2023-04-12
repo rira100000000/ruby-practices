@@ -10,7 +10,7 @@ class Frame
     @bonus_score = 0
   end
 
-  def calc_frame
+  def calc_scores
     @first_score + @second_score + @bonus_score
   end
 

@@ -4,7 +4,7 @@
 require 'optparse'
 require_relative 'game'
 
-def option_perse
+def option_parse
   opt = OptionParser.new
   opt.on('score', 'ボーリングのスコアを,区切りで入力してください。')
   opt.banner = 'ボーリングのスコアを,区切りで入力してください。'
@@ -12,5 +12,5 @@ def option_perse
   ARGV
 end
 
-game = Game.new(option_perse[0])
-puts game.calc_game.sum
+game = Game.new(option_parse[0])
+puts game.calc_all_frames.sum
