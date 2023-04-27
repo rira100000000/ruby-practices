@@ -9,7 +9,7 @@ class ShortFormatList
   def make_short_format_list(paths, options)
     result = []
     flag = options[:a] ? File::FNM_DOTMATCH : 0
-    if paths == []
+    if paths.empty?
       file_list = Dir.glob('*', base: Dir.pwd, flags: flag).sort
       file_list.reverse! if options[:r]
       adjust_list_for_display(file_list).each { |line| result << line }
@@ -18,7 +18,7 @@ class ShortFormatList
       file_list = separator.fetch_file(options[:r])
       display_lines = adjust_list_for_display(file_list)
       display_lines.each { |line| result << line }
-      result << "\n" unless file_list == []
+      result << "\n" unless file_list.empty?
       directorys = list_directory_files_for_display(separator.fetch_directory(options[:r]), flag, options[:r])
       result.push(*directorys)
       result
@@ -28,7 +28,7 @@ class ShortFormatList
   def list_directory_files_for_display(directory_list, flag, need_reverse_order)
     result = []
     directory_list.each do |directory|
-      result << "\n" unless result == []
+      result << "\n" unless result.empty?
       result << "#{directory}:" if directory_list.size > 1
       file_list = Dir.glob('*', base: directory, flags: flag).sort
       file_list.reverse! if need_reverse_order
