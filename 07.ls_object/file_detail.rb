@@ -53,6 +53,7 @@ class FileDetail
 
   def fetch_file_mode(stat)
     result = []
+    # ファイルモードを8進数に変換して末尾3桁（パーミッション）を取得する
     mode = stat.mode.to_s(8)[-3..]
     mode.each_char do |char|
       result << MODE_LIST[char.to_i]
