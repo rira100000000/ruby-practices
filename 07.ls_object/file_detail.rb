@@ -1,26 +1,28 @@
 # frozen_string_literal: true
 
 class FileDetail
-  TYPE_LIST = {
-    file: '-',
-    directory: 'd',
-    characterSpecial: 'c',
-    blockSpecial: 'b',
-    fifo: 'p',
-    link: 'l',
-    socket: 's'
-  }.freeze
+  TYPE_LIST =
+    {
+      file: '-',
+      directory: 'd',
+      characterSpecial: 'c',
+      blockSpecial: 'b',
+      fifo: 'p',
+      link: 'l',
+      socket: 's'
+    }.freeze
 
-  MODE_LIST = {
-    7 => 'rwx',
-    6 => 'rw-',
-    5 => 'r-x',
-    4 => 'r--',
-    3 => '-wx',
-    2 => '-w-',
-    1 => '--x',
-    0 => '---'
-  }.freeze
+  MODE_LIST =
+    {
+      7 => 'rwx',
+      6 => 'rw-',
+      5 => 'r-x',
+      4 => 'r--',
+      3 => '-wx',
+      2 => '-w-',
+      1 => '--x',
+      0 => '---'
+    }.freeze
 
   attr_reader :name, :detail
 
