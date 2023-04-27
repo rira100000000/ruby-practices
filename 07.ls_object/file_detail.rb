@@ -50,11 +50,11 @@ class FileDetail
   end
 
   def fetch_file_mode(stat)
-    result = +''
+    result = []
     mode = stat.mode.to_s(8)[-3..]
     mode.each_char do |char|
       result << MODE_LIST[char.to_i]
     end
-    result
+    result.join
   end
 end

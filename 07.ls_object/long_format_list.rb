@@ -79,7 +79,7 @@ class LongFormatList
 
   def fetch_directory_details(directory_list, need_reverse_order, need_hidden_file)
     flag = need_hidden_file ? File::FNM_DOTMATCH : 0
-    result = +''
+    result = []
     directory_list.each do |directory|
       file_list = Dir.glob('*', base: directory, flags: flag).sort
       file_list.reverse! if need_reverse_order
@@ -95,6 +95,6 @@ class LongFormatList
       long_format_list.each { |file| result << file }
       result << "\n"
     end
-    result
+    result.join
   end
 end
