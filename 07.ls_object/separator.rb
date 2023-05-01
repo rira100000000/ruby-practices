@@ -5,13 +5,13 @@ class Separator
     @paths = paths
   end
 
-  def fetch_file(need_reverse_order = nil)
+  def fetch_file(reverse_required = nil)
     result = @paths.select { |path| File::Stat.new(path).file? }.sort
-    need_reverse_order ? result.reverse! : result
+    reverse_required ? result.reverse! : result
   end
 
-  def fetch_directory(need_reverse_order = nil)
+  def fetch_directory(reverse_required = nil)
     result = @paths.select { |path| File::Stat.new(path).directory? }.sort
-    need_reverse_order ? result.reverse! : result
+    reverse_required ? result.reverse! : result
   end
 end
