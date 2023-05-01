@@ -8,7 +8,9 @@ class LongFormatList
     @max_length_hash = reset_max_length_hash
   end
 
-  def make_long_format_list(options)
+  def make_long_format_list(paths, options)
+    return make_long_format_list_with_paths(paths, options) unless paths.empty?
+
     flag = options[:a] ? File::FNM_DOTMATCH : 0
     file_name_list = Dir.glob('*', base: Dir.pwd, flags: flag).sort
     file_name_list.reverse! if options[:r]
