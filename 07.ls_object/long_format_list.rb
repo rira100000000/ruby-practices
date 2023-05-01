@@ -60,13 +60,16 @@ class LongFormatList
 
   def list_long_format_for_display(file_details)
     file_details.map do |file|
-      "#{file.detail[:type]}#{file.detail[:mode]} "\
-      "#{file.detail[:nlink].to_s.rjust(@max_length_hash[:nlink])} "\
-      "#{file.detail[:uid].rjust(@max_length_hash[:uid])} "\
-      "#{file.detail[:gid].rjust(@max_length_hash[:gid])} "\
-      "#{file.detail[:size].to_s.rjust(@max_length_hash[:size])} "\
-      "#{file.detail[:mtime].strftime('%b %e %R')} "\
-      "#{file.name}\n"
+      cols = []
+      cols << "#{file.detail[:type]}#{file.detail[:mode]}"
+      cols << file.detail[:nlink].to_s.rjust(@max_length_hash[:nlink])
+      cols << file.detail[:uid].rjust(@max_length_hash[:uid])
+      cols << file.detail[:gid].rjust(@max_length_hash[:gid])
+      cols << file.detail[:size].to_s.rjust(@max_length_hash[:size])
+      cols << file.detail[:mtime].strftime('%b %e %R')
+      cols << file.name
+
+      cols.join(' ')
     end
   end
 
