@@ -63,7 +63,8 @@ class ShortFormatList
     lines.map do |file_names|
       display_line = []
       file_names.each_with_index do |file_name, i|
-        display_line << "#{file_name}#{' ' * (max_file_names[i] - calc_file_name_size(file_name) + SPACE_FOR_COLUMNS)}"
+        space_count = max_file_names[i] + SPACE_FOR_COLUMNS
+        display_line << file_name.ljust(space_count)
       end
       display_line.join
     end
