@@ -16,8 +16,7 @@ class ShortFormatList
     else
       separator = Separator.new(paths)
       file_list = separator.fetch_file(options[:r])
-      display_lines = adjust_list_for_display(file_list)
-      display_lines.each { |line| result << line }
+      adjust_list_for_display(file_list).each { |line| result << line }
       result << "\n" unless file_list.empty?
       directorys = list_directory_files_for_display(separator.fetch_directory(options[:r]), flag, options[:r])
       result.push(*directorys)
@@ -32,8 +31,7 @@ class ShortFormatList
       result << "#{directory}:" if directory_list.size > 1
       file_list = Dir.glob('*', base: directory, flags: flag).sort
       file_list.reverse! if need_reverse_order
-      display_lines = adjust_list_for_display(file_list)
-      display_lines.each { |line| result << line }
+      adjust_list_for_display(file_list).each { |line| result << line }
     end
     result
   end

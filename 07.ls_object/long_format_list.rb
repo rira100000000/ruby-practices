@@ -29,16 +29,13 @@ class LongFormatList
   def make_long_format_list_with_paths(paths, options)
     result = +''
     separator = Separator.new(paths)
-    file_list = separator.fetch_file(options[:r])
-    file_details = file_list.map do |file|
+    file_details = separator.fetch_file(options[:r]).map do |file|
       file_detail = FileDetail.new(file)
       compare_max_length(file_detail)
       file_detail
     end
-    long_format_file_list = list_long_format_for_display(file_details)
-    long_format_file_list.each { |file| result << file }
-    directory_list = separator.fetch_directory(options[:r])
-    result << fetch_directory_details(directory_list, options[:r], options[:a])
+    list_long_format_for_display(file_details).each { |file| result << file }
+    result << fetch_directory_details(separator.fetch_directory(options[:r]), options[:r], options[:a])
     # 最終行の空行は削除してリターン
     result[..-2]
   end
@@ -91,8 +88,7 @@ class LongFormatList
         file_detail
       end
       long_format_list = list_long_format_for_display(file_details)
-      total_block = calc_total_block(file_details)
-      long_format_list.unshift("total #{total_block} \n")
+      long_format_list.unshift("total #{calc_total_block(file_details)} \n")
       long_format_list.unshift("#{directory}:\n") if directory_list.size > 1
       long_format_list.each { |file| result << file }
       result << "\n"
