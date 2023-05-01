@@ -42,29 +42,29 @@ class LongFormatList
 
   def reset_max_length_hash
     {
-      link_max_char_length: 0,
-      user_name_max_char_length: 0,
-      group_name_max_char_length: 0,
-      file_size_max_char_length: 0,
-      file_name_max_char_length: 0
+      nlink: 0,
+      uid: 0,
+      gid: 0,
+      size: 0,
+      file_name: 0
     }
   end
 
   def compare_max_length(file)
-    @max_length_hash[:link_max_char_length] = [file.detail[:nlink].to_s.length, @max_length_hash[:link_max_char_length]].max
-    @max_length_hash[:user_name_max_char_length] = [Etc.getpwuid(file.detail[:uid].to_i).name.to_s.length, @max_length_hash[:user_name_max_char_length]].max
-    @max_length_hash[:group_name_max_char_length] = [Etc.getgrgid(file.detail[:gid].to_i).name.to_s.length, @max_length_hash[:group_name_max_char_length]].max
-    @max_length_hash[:file_size_max_char_length] = [file.detail[:size].to_s.length, @max_length_hash[:file_size_max_char_length]].max
-    @max_length_hash[:file_name_max_char_length] = [file.name.length, @max_length_hash[:file_name_max_char_length]].max
+    @max_length_hash[:nlink] = [file.detail[:nlink].to_s.length, @max_length_hash[:nlink]].max
+    @max_length_hash[:uid] = [Etc.getpwuid(file.detail[:uid].to_i).name.to_s.length, @max_length_hash[:uid]].max
+    @max_length_hash[:gid] = [Etc.getgrgid(file.detail[:gid].to_i).name.to_s.length, @max_length_hash[:gid]].max
+    @max_length_hash[:size] = [file.detail[:size].to_s.length, @max_length_hash[:size]].max
+    @max_length_hash[:file_name] = [file.name.length, @max_length_hash[:file_name]].max
   end
 
   def list_long_format_for_display(file_details)
     file_details.map do |file|
       "#{file.detail[:type]}#{file.detail[:mode]} "\
-      "#{file.detail[:nlink].to_s.rjust(@max_length_hash[:link_max_char_length])} "\
-      "#{file.detail[:uid].rjust(@max_length_hash[:user_name_max_char_length])} "\
-      "#{file.detail[:gid].rjust(@max_length_hash[:group_name_max_char_length])} "\
-      "#{file.detail[:size].to_s.rjust(@max_length_hash[:file_size_max_char_length])} "\
+      "#{file.detail[:nlink].to_s.rjust(@max_length_hash[:nlink])} "\
+      "#{file.detail[:uid].rjust(@max_length_hash[:uid])} "\
+      "#{file.detail[:gid].rjust(@max_length_hash[:gid])} "\
+      "#{file.detail[:size].to_s.rjust(@max_length_hash[:size])} "\
       "#{file.detail[:mtime].strftime('%b %e %R')} "\
       "#{file.name}\n"
     end

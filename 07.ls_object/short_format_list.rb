@@ -18,8 +18,8 @@ class ShortFormatList
       file_list = separator.fetch_file(options[:r])
       adjust_list_for_display(file_list).each { |line| result << line }
       result << "\n" unless file_list.empty?
-      directorys = list_directory_files_for_display(separator.fetch_directory(options[:r]), flag, options[:r])
-      result.push(*directorys)
+      directories = list_directory_files_for_display(separator.fetch_directory(options[:r]), flag, options[:r])
+      result.push(*directories)
       result
     end
   end
@@ -41,14 +41,14 @@ class ShortFormatList
     lines = []
     max_file_names = []
     files.each_with_index do |file_name, i|
-      now_row = i % rows
-      now_column = i / rows
-      lines[now_row] = [] if now_column.zero?
-      max_file_names[now_column] ||= 0
+      current_row = i % rows
+      current_column = i / rows
+      lines[current_row] = [] if current_column.zero?
+      max_file_names[current_column] ||= 0
 
-      lines[now_row] << file_name
+      lines[current_row] << file_name
       file_name_size = calc_file_name_size(file_name)
-      max_file_names[now_column] = file_name_size if max_file_names[now_column] < file_name_size
+      max_file_names[current_column] = file_name_size if max_file_names[current_column] < file_name_size
     end
     add_space_for_line(lines, max_file_names)
   end
