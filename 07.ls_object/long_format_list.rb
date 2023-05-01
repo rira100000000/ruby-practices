@@ -29,13 +29,13 @@ class LongFormatList
   def make_long_format_list_with_paths(paths, options)
     result = +''
     separator = Separator.new(paths)
-    file_details = separator.fetch_file(options[:r]).map do |file|
+    file_details = separator.fetch_file(reverse_required: options[:r]).map do |file|
       file_detail = FileDetail.new(file)
       compare_max_length(file_detail)
       file_detail
     end
     list_long_format_for_display(file_details).each { |file| result << file }
-    result << fetch_directory_details(separator.fetch_directory(options[:r]), options[:r], options[:a])
+    result << fetch_directory_details(separator.fetch_directory(reverse_required: options[:r]), options[:r], options[:a])
     # 最終行の空行は削除してリターン
     result[..-2]
   end

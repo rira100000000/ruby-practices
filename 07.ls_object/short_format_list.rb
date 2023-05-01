@@ -15,10 +15,10 @@ class ShortFormatList
       adjust_list_for_display(file_list).each { |line| result << line }
     else
       separator = Separator.new(paths)
-      file_list = separator.fetch_file(options[:r])
+      file_list = separator.fetch_file(reverse_required: options[:r])
       adjust_list_for_display(file_list).each { |line| result << line }
       result << "\n" unless file_list.empty?
-      directories = list_directory_files_for_display(separator.fetch_directory(options[:r]), flag, options[:r])
+      directories = list_directory_files_for_display(separator.fetch_directory(reverse_required: options[:r]), flag, options[:r])
       result.push(*directories)
       result
     end
