@@ -1,39 +1,20 @@
 # frozen_string_literal: true
 
-require_relative 'separator'
+require_relative 'file_list'
 
 COLUMNS = 3
 SPACE_FOR_COLUMNS = 2
 
 class ShortFormatList
   def make_short_format_list(paths, options)
-    result = []
-    flag = options[:a] ? File::FNM_DOTMATCH : 0
-    if paths.empty?
-      file_list = Dir.glob('*', base: Dir.pwd, flags: flag).sort
-      file_list.reverse! if options[:r]
-      adjust_list_for_display(file_list).each { |line| result << line }
-    else
-      separator = Separator.new(paths)
-      file_list = separator.fetch_file(reverse_required: options[:r])
-      adjust_list_for_display(file_list).each { |line| result << line }
-      result << "\n" unless file_list.empty?
-      directories = list_directory_files_for_display(separator.fetch_directory(reverse_required: options[:r]), flag, options[:r])
-      result.push(*directories)
-      result
-    end
+    return fetch_file_details(paths[0], options[:r], options[:a]) unless paths.empty?
+
+    fetch_file_details(Dir.pwd, options[:r], options[:a])
   end
 
-  def list_directory_files_for_display(directory_list, flag, need_reverse_order)
-    result = []
-    directory_list.each do |directory|
-      result << "\n" unless result.empty?
-      result << "#{directory}:" if directory_list.size > 1
-      file_list = Dir.glob('*', base: directory, flags: flag).sort
-      file_list.reverse! if need_reverse_order
-      adjust_list_for_display(file_list).each { |line| result << line }
-    end
-    result
+  def fetch_file_details(path, reverse_required, hidden_file_required)
+    file_list = FileList.new(path, reverse_required, hidden_file_required)
+    adjust_list_for_display(file_list.name_list)
   end
 
   def adjust_list_for_display(files)
@@ -47,8 +28,7 @@ class ShortFormatList
       max_file_names[current_column] ||= 0
 
       lines[current_row] << file_name
-      file_name_size = calc_file_name_size(file_name)
-      max_file_names[current_column] = file_name_size if max_file_names[current_column] < file_name_size
+      max_file_names[current_column] = calc_file_name_size(file_name) if max_file_names[current_column] < file_name.size
     end
     add_space_for_line(lines, max_file_names)
   end
