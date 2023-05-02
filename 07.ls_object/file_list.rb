@@ -8,7 +8,13 @@ class FileList
     @reverse_required = reverse_required
     @hidden_file_required = hidden_file_required
     @name_list, @directory = parse_path
-    @max_length_hash = reset_max_length_hash
+    @max_length_hash = {
+      nlink: 0,
+      uid: 0,
+      gid: 0,
+      size: 0,
+      file_name: 0
+    }
   end
 
   def list_detail
@@ -32,16 +38,6 @@ class FileList
             end
     file_list = @reverse_required ? files.reverse : files
     [file_list, directory]
-  end
-
-  def reset_max_length_hash
-    {
-      nlink: 0,
-      uid: 0,
-      gid: 0,
-      size: 0,
-      file_name: 0
-    }
   end
 
   def compare_max_length(file)
