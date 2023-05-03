@@ -2,13 +2,10 @@
 
 require_relative 'file_detail'
 require_relative 'file_list'
+require_relative 'fetch_file_detail'
 
 class LongFormatList
-  def make_long_format_list(paths, options)
-    return fetch_file_details(paths[0], options[:r], options[:a]) unless paths.empty?
-
-    fetch_file_details(Dir.pwd, options[:r], options[:a])
-  end
+  include FetchFileDetail
 
   def fetch_file_details(path, reverse_required, hidden_file_required)
     result = []

@@ -1,16 +1,13 @@
 # frozen_string_literal: true
 
 require_relative 'file_list'
+require_relative 'fetch_file_detail'
 
 COLUMNS = 3
 SPACE_FOR_COLUMNS = 2
 
 class ShortFormatList
-  def make_short_format_list(paths, options)
-    return fetch_file_details(paths[0], options[:r], options[:a]) unless paths.empty?
-
-    fetch_file_details(Dir.pwd, options[:r], options[:a])
-  end
+  include FetchFileDetail
 
   def fetch_file_details(path, reverse_required, hidden_file_required)
     file_list = FileList.new(path, reverse_required, hidden_file_required)
