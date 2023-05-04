@@ -9,6 +9,8 @@ SPACE_FOR_COLUMNS = 2
 class ShortFormatList
   include FetchFileDetail
 
+  private
+  
   def fetch_file_details(path, reverse_required, hidden_file_required)
     file_list = FileList.new(path, reverse_required, hidden_file_required)
     adjust_list_for_display(file_list.name_list)

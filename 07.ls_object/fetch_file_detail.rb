@@ -7,6 +7,8 @@ module FetchFileDetail
     fetch_file_details(Dir.pwd, options[:r], options[:a])
   end
 
+  private
+
   def fetch_file_details(path, reverse_required, hidden_file_required)
     raise NotImplementedError, 'Method not implemented'
   end
