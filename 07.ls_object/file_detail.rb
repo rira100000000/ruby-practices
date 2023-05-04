@@ -24,7 +24,7 @@ class FileDetail
       0 => '---'
     }.freeze
 
-  attr_reader :name, :type, :mode, :nlink, :uid, :gid, :size, :mtime, :blocks 
+  attr_reader :name, :type, :mode, :nlink, :uid, :gid, :size, :mtime, :blocks
 
   def initialize(name, directory = '')
     @name = name

@@ -8,7 +8,7 @@ class LongFormatList
   include FetchFileDetail
 
   private
-  
+
   def fetch_file_details(path, reverse_required, hidden_file_required)
     result = []
     file_list = FileList.new(path, reverse_required, hidden_file_required)
