@@ -28,13 +28,13 @@ class FileDetail
 
   def initialize(name, directory = '')
     @name = name
-    @path = if directory == ''
-              name
-            else
-              "#{directory}/#{name}"
-            end
+    path = if directory == ''
+             name
+           else
+             "#{directory}/#{name}"
+           end
 
-    stat = File::Stat.new(@path)
+    stat = File::Stat.new(path)
     @type = TYPE_LIST[stat.ftype.to_sym]
     @mode = fetch_file_mode(stat)
     @nlink = stat.nlink
