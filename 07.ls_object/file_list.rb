@@ -41,10 +41,10 @@ class FileList
   end
 
   def compare_max_length(file)
-    @max_length_hash[:nlink] = [file.detail[:nlink].to_s.length, @max_length_hash[:nlink]].max
-    @max_length_hash[:uid] = [Etc.getpwuid(file.detail[:uid].to_i).name.to_s.length, @max_length_hash[:uid]].max
-    @max_length_hash[:gid] = [Etc.getgrgid(file.detail[:gid].to_i).name.to_s.length, @max_length_hash[:gid]].max
-    @max_length_hash[:size] = [file.detail[:size].to_s.length, @max_length_hash[:size]].max
+    @max_length_hash[:nlink] = [file.nlink.to_s.length, @max_length_hash[:nlink]].max
+    @max_length_hash[:uid] = [Etc.getpwuid(file.uid.to_i).name.to_s.length, @max_length_hash[:uid]].max
+    @max_length_hash[:gid] = [Etc.getgrgid(file.gid.to_i).name.to_s.length, @max_length_hash[:gid]].max
+    @max_length_hash[:size] = [file.size.to_s.length, @max_length_hash[:size]].max
     @max_length_hash[:file_name] = [file.name.length, @max_length_hash[:file_name]].max
   end
 end

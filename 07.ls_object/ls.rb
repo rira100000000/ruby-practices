@@ -20,9 +20,11 @@ end
 def main
   paths, options = parse_option
   if options[:l]
-    puts LongFormatList.new.make_formatted_list(paths, options)
+    long_format = LongFormatList.new
+    puts long_format.make_formatted_list(paths, options)
   else
-    puts ShortFormatList.new.make_formatted_list(paths, options)
+    short_format = ShortFormatList.new
+    puts short_format.make_formatted_list(paths, options)
   end
 end
 

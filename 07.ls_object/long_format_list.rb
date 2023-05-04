@@ -21,12 +21,12 @@ class LongFormatList
   def adjust_list_for_display(file_details, max_length_hash)
     file_details.map do |file|
       cols = []
-      cols << "#{file.detail[:type]}#{file.detail[:mode]}"
-      cols << file.detail[:nlink].to_s.rjust(max_length_hash[:nlink])
-      cols << file.detail[:uid].rjust(max_length_hash[:uid])
-      cols << file.detail[:gid].rjust(max_length_hash[:gid])
-      cols << file.detail[:size].to_s.rjust(max_length_hash[:size])
-      cols << file.detail[:mtime].strftime('%b %e %R')
+      cols << "#{file.type}#{file.mode}"
+      cols << file.nlink.to_s.rjust(max_length_hash[:nlink])
+      cols << file.uid.rjust(max_length_hash[:uid])
+      cols << file.gid.rjust(max_length_hash[:gid])
+      cols << file.size.to_s.rjust(max_length_hash[:size])
+      cols << file.mtime.strftime('%b %e %R')
       cols << file.name
 
       cols.join(' ')
@@ -36,6 +36,6 @@ class LongFormatList
   def calc_total_block(file_details)
     # statの1ブロック単位は512byte
     # lsコマンドでの1ブロック単位1024byteに合わせるため2で割る
-    file_details.sum { |file| file.detail[:blocks] / 2 }
+    file_details.sum { |file| file.blocks / 2 }
   end
 end

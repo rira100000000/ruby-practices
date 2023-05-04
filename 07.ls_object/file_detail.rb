@@ -24,7 +24,7 @@ class FileDetail
       0 => '---'
     }.freeze
 
-  attr_reader :name, :detail
+  attr_reader :name, :type, :mode, :nlink, :uid, :gid, :size, :mtime, :blocks 
 
   def initialize(name, directory = '')
     @name = name
@@ -33,22 +33,19 @@ class FileDetail
             else
               "#{directory}/#{name}"
             end
-    @detail = fetch_detail
+
+    stat = File::Stat.new(@path)
+    @type = TYPE_LIST[stat.ftype.to_sym]
+    @mode = fetch_file_mode(stat)
+    @nlink = stat.nlink
+    @uid = Etc.getpwuid(stat.uid).name
+    @gid = Etc.getgrgid(stat.gid).name
+    @size = stat.size
+    @mtime = stat.mtime
+    @blocks = stat.blocks
   end
 
-  def fetch_detail
-    stat = File::Stat.new(@path)
-    {
-      type: TYPE_LIST[stat.ftype.to_sym],
-      mode: fetch_file_mode(stat),
-      nlink: stat.nlink,
-      uid: Etc.getpwuid(stat.uid).name,
-      gid: Etc.getgrgid(stat.gid).name,
-      size: stat.size,
-      mtime: stat.mtime,
-      blocks: stat.blocks
-    }
-  end
+  private
 
   def fetch_file_mode(stat)
     result = []
