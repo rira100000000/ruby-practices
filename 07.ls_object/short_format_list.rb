@@ -3,10 +3,9 @@
 require_relative 'file_list'
 require_relative 'file_detail_fetchable'
 
-COLUMNS = 3
-SPACE_FOR_COLUMNS = 2
-
 class ShortFormatList
+  COLUMNS = 3
+  SPACE_FOR_COLUMNS = 2
   include FileDetailfetchable
 
   private
