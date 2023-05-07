@@ -2,10 +2,10 @@
 
 require_relative 'file_detail'
 require_relative 'file_list'
-require_relative 'fetch_file_detail'
+require_relative 'file_detail_fetchable'
 
 class LongFormatList
-  include FetchFileDetail
+  include FileDetailfetchable
 
   private
 

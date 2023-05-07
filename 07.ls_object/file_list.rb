@@ -20,7 +20,7 @@ class FileList
   def list_detail
     @name_list.map do |file|
       file_detail = FileDetail.new(file, @directory)
-      compare_max_length(file_detail)
+      update_max_length(file_detail)
       file_detail
     end
   end
@@ -40,7 +40,7 @@ class FileList
     [file_list, directory]
   end
 
-  def compare_max_length(file)
+  def update_max_length(file)
     @max_length_hash[:nlink] = [file.nlink.to_s.length, @max_length_hash[:nlink]].max
     @max_length_hash[:uid] = [Etc.getpwuid(file.uid.to_i).name.to_s.length, @max_length_hash[:uid]].max
     @max_length_hash[:gid] = [Etc.getgrgid(file.gid.to_i).name.to_s.length, @max_length_hash[:gid]].max

@@ -36,7 +36,7 @@ class FileDetail
 
     stat = File::Stat.new(path)
     @type = TYPE_LIST[stat.ftype.to_sym]
-    @mode = fetch_file_mode(stat)
+    @mode = get_file_mode(stat)
     @nlink = stat.nlink
     @uid = Etc.getpwuid(stat.uid).name
     @gid = Etc.getgrgid(stat.gid).name
@@ -47,7 +47,7 @@ class FileDetail
 
   private
 
-  def fetch_file_mode(stat)
+  def get_file_mode(stat)
     result = []
     # ファイルモードを8進数に変換して末尾3桁（パーミッション）を取得する
     stat.mode.to_s(8)[-3..].each_char do |char|

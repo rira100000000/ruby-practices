@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 require_relative 'file_list'
-require_relative 'fetch_file_detail'
+require_relative 'file_detail_fetchable'
 
 COLUMNS = 3
 SPACE_FOR_COLUMNS = 2
 
 class ShortFormatList
-  include FetchFileDetail
+  include FileDetailfetchable
 
   private
 
