@@ -1,32 +1,30 @@
 # frozen_string_literal: true
 
 require_relative 'file_list'
-require_relative 'file_detail_fetchable'
+require_relative 'file_detail_fetcher'
 
 class ShortFormatList
   COLUMNS = 3
   SPACE_FOR_COLUMNS = 2
-  include FileDetailfetchable
+
+  def format(file_details)
+    adjust_list_for_display(file_details)
+  end
 
   private
-
-  def fetch_file_details(path, reverse_required, hidden_file_required)
-    file_list = FileList.new(path, reverse_required, hidden_file_required)
-    adjust_list_for_display(file_list.name_list)
-  end
 
   def adjust_list_for_display(files)
     rows = (files.size.to_f / COLUMNS).ceil
     lines = []
     max_file_names = []
-    files.each_with_index do |file_name, i|
+    files.each_with_index do |file, i|
       current_row = i % rows
       current_column = i / rows
       lines[current_row] = [] if current_column.zero?
       max_file_names[current_column] ||= 0
 
-      lines[current_row] << file_name
-      max_file_names[current_column] = calc_file_name_size(file_name) if max_file_names[current_column] < file_name.size
+      lines[current_row] << file.name
+      max_file_names[current_column] = calc_file_name_size(file.name) if max_file_names[current_column] < file.stat.size
     end
     add_space_for_line(lines, max_file_names)
   end

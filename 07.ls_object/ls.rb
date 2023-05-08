@@ -19,12 +19,12 @@ end
 
 def main
   paths, options = parse_option
+  file_details = FileDetailfetcher.new.fetch(paths, options)
+
   if options[:l]
-    long_format = LongFormatList.new
-    puts long_format.format_list(paths, options)
+    puts LongFormatList.new.format(file_details)
   else
-    short_format = ShortFormatList.new
-    puts short_format.format_list(paths, options)
+    puts ShortFormatList.new.format(file_details)
   end
 end
 

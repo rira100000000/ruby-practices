@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-module FileDetailfetchable
-  def format_list(paths, options)
+class FileDetailfetcher
+  def fetch(paths, options)
     return fetch_file_details(paths[0], options[:r], options[:a]) unless paths.empty?
 
     fetch_file_details(Dir.pwd, options[:r], options[:a])
@@ -10,6 +10,6 @@ module FileDetailfetchable
   private
 
   def fetch_file_details(path, reverse_required, hidden_file_required)
-    raise NotImplementedError, 'Method not implemented'
+    FileList.new(path, reverse_required, hidden_file_required).list_detail
   end
 end
