@@ -24,7 +24,7 @@ class ShortFormatList
       max_file_names[current_column] ||= 0
 
       lines[current_row] << file.name
-      max_file_names[current_column] = calc_file_name_size(file.name) if max_file_names[current_column] < file.stat.size
+      max_file_names[current_column] = calc_file_name_size(file.name) if max_file_names[current_column] < file.name.size
     end
     add_space_for_line(lines, max_file_names)
   end
