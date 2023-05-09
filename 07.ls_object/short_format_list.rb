@@ -24,9 +24,7 @@ class ShortFormatList
       next unless ((i + 1) % rows).zero? || i + 1 == file_details.length
 
       # 最終行または最終ファイルの場合
-      max_file_names << line.map do |file_name|
-        calc_file_name_size(file_name)
-      end.max
+      max_file_names << line.map { |file_name| calc_file_name_size(file_name) }.max
       line.fill('', line.length...rows)
       lines << line
       line = []
@@ -43,10 +41,9 @@ class ShortFormatList
 
   def add_space_for_line(lines, max_file_names)
     lines.map do |file_names|
-      display_line = []
-      file_names.each_with_index do |file_name, i|
+      display_line = file_names.map.with_index do |file_name, i|
         space_count = max_file_names[i] + SPACE_FOR_COLUMNS - count_not_ascii(file_name)
-        display_line << file_name.ljust(space_count)
+        file_name.ljust(space_count)
       end
       display_line.join
     end
