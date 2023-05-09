@@ -20,13 +20,13 @@ class FileList
 
   def parse_path
     flag = @hidden_file_required ? File::FNM_DOTMATCH : 0
-    files = if File::Stat.new(@path).directory?
-              directory = @path
-              Dir.glob('*', base: @path, flags: flag).sort
-            else
-              directory = ''
-              [@path]
-            end
+    if File::Stat.new(@path).directory?
+      directory = @path
+      files = Dir.glob('*', base: @path, flags: flag).sort
+    else
+      directory = ''
+      files = [@path]
+    end
     file_list = @reverse_required ? files.reverse : files
     [file_list, directory]
   end
