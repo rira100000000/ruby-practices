@@ -35,7 +35,6 @@ class FileDetail
            end
 
     @stat = File::Stat.new(path)
-    @mode = get_file_mode(@stat)
   end
 
   def type
