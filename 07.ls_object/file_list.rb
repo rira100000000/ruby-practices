@@ -11,8 +11,8 @@ class FileList
   end
 
   def list_detail
-    @names.map do |file|
-      FileDetail.new(file, @directory)
+    @names.map do |name|
+      FileDetail.new(name, @directory)
     end
   end
 
