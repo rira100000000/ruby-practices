@@ -34,8 +34,8 @@ class LongFormatList
       cols = []
       cols << "#{file_detail.type}#{file_detail.mode}"
       cols << file_detail.stat.nlink.to_s.rjust(@max_length_hash[:nlink])
-      cols << Etc.getpwuid(file_detail.stat.uid).name.rjust(@max_length_hash[:uid])
-      cols << Etc.getgrgid(file_detail.stat.gid).name.rjust(@max_length_hash[:gid])
+      cols << file_detail.uid.rjust(@max_length_hash[:uid])
+      cols << file_detail.gid.rjust(@max_length_hash[:gid])
       cols << file_detail.stat.size.to_s.rjust(@max_length_hash[:size])
       cols << file_detail.stat.mtime.strftime('%b %e %R')
       cols << file_detail.name
@@ -52,8 +52,8 @@ class LongFormatList
 
   def update_max_length(file_detail)
     @max_length_hash[:nlink] = [file_detail.stat.nlink.to_s.length, @max_length_hash[:nlink]].max
-    @max_length_hash[:uid] = [Etc.getpwuid(file_detail.stat.uid).name.to_s.length, @max_length_hash[:uid]].max
-    @max_length_hash[:gid] = [Etc.getgrgid(file_detail.stat.gid).name.to_s.length, @max_length_hash[:gid]].max
+    @max_length_hash[:uid] = [file_detail.uid.to_s.length, @max_length_hash[:uid]].max
+    @max_length_hash[:gid] = [file_detail.gid.to_s.length, @max_length_hash[:gid]].max
     @max_length_hash[:size] = [file_detail.stat.size.to_s.length, @max_length_hash[:size]].max
     @max_length_hash[:file_name] = [file_detail.name.length, @max_length_hash[:file_name]].max
   end

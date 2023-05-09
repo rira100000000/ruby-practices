@@ -45,6 +45,14 @@ class FileDetail
     get_file_mode(@stat)
   end
 
+  def uid
+    Etc.getpwuid(@stat.uid).name
+  end
+
+  def gid
+    Etc.getgrgid(@stat.gid).name
+  end
+
   private
 
   def get_file_mode(stat)
