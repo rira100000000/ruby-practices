@@ -13,20 +13,24 @@ class ShortFormatList
 
   private
 
-  def adjust_list_for_display(files)
-    rows = (files.size.to_f / COLUMNS).ceil
+  def adjust_list_for_display(file_details)
+    # 行数
+    rows = (file_details.size.to_f / COLUMNS).ceil
     lines = []
+    line = []
     max_file_names = []
-    files.each_with_index do |file, i|
-      current_row = i % rows
-      current_column = i / rows
-      lines[current_row] = [] if current_column.zero?
-      max_file_names[current_column] ||= 0
+    file_details.each_with_index do |file_detail, i|
+      line << file_detail.name
+      next unless ((i + 1) % rows).zero? || i + 1 == file_details.length
 
-      lines[current_row] << file.name
-      max_file_names[current_column] = calc_file_name_size(file.name) if max_file_names[current_column] < file.name.size
+      # 最終行、最終ファイルの場合
+      max_file_names << line.map(&:length).max
+      line.fill('', line.length...rows)
+      lines << line
+      line = []
     end
-    add_space_for_line(lines, max_file_names)
+
+    add_space_for_line(lines.transpose, max_file_names)
   end
 
   def calc_file_name_size(file_name)
