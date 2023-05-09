@@ -2,7 +2,6 @@
 
 require_relative 'file_detail'
 require_relative 'file_list'
-require_relative 'file_detail_fetcher'
 
 class LongFormatList
   attr_accessor :max_length_hash

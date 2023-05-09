@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require_relative 'file_list'
-require_relative 'file_detail_fetcher'
 
 class ShortFormatList
   COLUMNS = 3

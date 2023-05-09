@@ -5,6 +5,7 @@ require 'optparse'
 require 'etc'
 require_relative 'short_format_list'
 require_relative 'long_format_list'
+require_relative 'file_detail_fetcher'
 
 def parse_option
   opt = OptionParser.new
