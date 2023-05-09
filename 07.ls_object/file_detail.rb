@@ -24,7 +24,7 @@ class FileDetail
       0 => '---'
     }.freeze
 
-  attr_reader :name, :stat, :type, :mode
+  attr_reader :name, :stat
 
   def initialize(name, directory = '')
     @name = name
@@ -35,8 +35,15 @@ class FileDetail
            end
 
     @stat = File::Stat.new(path)
-    @type = TYPE_LIST[@stat.ftype.to_sym]
     @mode = get_file_mode(@stat)
+  end
+
+  def type
+    TYPE_LIST[@stat.ftype.to_sym]
+  end
+
+  def mode
+    get_file_mode(@stat)
   end
 
   private

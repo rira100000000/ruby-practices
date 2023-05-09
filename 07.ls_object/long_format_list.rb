@@ -30,15 +30,15 @@ class LongFormatList
   private
 
   def adjust_list_for_display(file_details)
-    file_details.map do |file|
+    file_details.map do |file_detail|
       cols = []
-      cols << "#{file.type}#{file.mode}"
-      cols << file.stat.nlink.to_s.rjust(@max_length_hash[:nlink])
-      cols << Etc.getpwuid(file.stat.uid).name.rjust(@max_length_hash[:uid])
-      cols << Etc.getgrgid(file.stat.gid).name.rjust(@max_length_hash[:gid])
-      cols << file.stat.size.to_s.rjust(@max_length_hash[:size])
-      cols << file.stat.mtime.strftime('%b %e %R')
-      cols << file.name
+      cols << "#{file_detail.type}#{file_detail.mode}"
+      cols << file_detail.stat.nlink.to_s.rjust(@max_length_hash[:nlink])
+      cols << Etc.getpwuid(file_detail.stat.uid).name.rjust(@max_length_hash[:uid])
+      cols << Etc.getgrgid(file_detail.stat.gid).name.rjust(@max_length_hash[:gid])
+      cols << file_detail.stat.size.to_s.rjust(@max_length_hash[:size])
+      cols << file_detail.stat.mtime.strftime('%b %e %R')
+      cols << file_detail.name
 
       cols.join(' ')
     end
