@@ -22,12 +22,12 @@ class FileList
     flag = @hidden_file_required ? File::FNM_DOTMATCH : 0
     if File::Stat.new(@path).directory?
       directory = @path
-      files = Dir.glob('*', base: @path, flags: flag).sort
+      names = Dir.glob('*', base: @path, flags: flag).sort
     else
       directory = ''
-      files = [@path]
+      names = [@path]
     end
-    file_list = @reverse_required ? files.reverse : files
-    [file_list, directory]
+    sorted_file_names = @reverse_required ? names.reverse : names
+    [sorted_file_names, directory]
   end
 end
