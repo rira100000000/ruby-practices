@@ -7,13 +7,8 @@ class LongFormatList
   attr_accessor :max_length_hash
 
   def initialize
-    @max_length_hash = {
-      nlink: 0,
-      uid: 0,
-      gid: 0,
-      size: 0,
-      file_name: 0
-    }
+    max_length = Struct.new(:nlink, :uid, :gid, :file_size, :file_name)
+    @max_length = max_length.new(0, 0, 0, 0, 0)
   end
 
   def format(file_details)
@@ -32,10 +27,10 @@ class LongFormatList
     file_details.map do |file_detail|
       cols = []
       cols << "#{file_detail.type}#{file_detail.mode}"
-      cols << file_detail.stat.nlink.to_s.rjust(@max_length_hash[:nlink])
-      cols << file_detail.uid.rjust(@max_length_hash[:uid])
-      cols << file_detail.gid.rjust(@max_length_hash[:gid])
-      cols << file_detail.stat.size.to_s.rjust(@max_length_hash[:size])
+      cols << file_detail.stat.nlink.to_s.rjust(@max_length.nlink)
+      cols << file_detail.uid.rjust(@max_length.uid)
+      cols << file_detail.gid.rjust(@max_length.gid)
+      cols << file_detail.stat.size.to_s.rjust(@max_length.file_size)
       cols << file_detail.stat.mtime.strftime('%b %e %R')
       cols << file_detail.name
 
@@ -50,10 +45,10 @@ class LongFormatList
   end
 
   def update_max_length(file_detail)
-    @max_length_hash[:nlink] = [file_detail.stat.nlink.to_s.length, @max_length_hash[:nlink]].max
-    @max_length_hash[:uid] = [file_detail.uid.to_s.length, @max_length_hash[:uid]].max
-    @max_length_hash[:gid] = [file_detail.gid.to_s.length, @max_length_hash[:gid]].max
-    @max_length_hash[:size] = [file_detail.stat.size.to_s.length, @max_length_hash[:size]].max
-    @max_length_hash[:file_name] = [file_detail.name.length, @max_length_hash[:file_name]].max
+    @max_length.nlink = [file_detail.stat.nlink.to_s.length, @max_length.nlink].max
+    @max_length.uid = [file_detail.uid.to_s.length, @max_length.uid].max
+    @max_length.gid = [file_detail.gid.to_s.length, @max_length.gid].max
+    @max_length.file_size = [file_detail.stat.size.to_s.length, @max_length.file_size].max
+    @max_length.file_name = [file_detail.name.length, @max_length.file_name].max
   end
 end
