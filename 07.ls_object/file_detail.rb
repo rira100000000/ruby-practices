@@ -42,7 +42,10 @@ class FileDetail
   end
 
   def mode
-    get_file_mode(@stat)
+    # ファイルモードを8進数に変換して末尾3桁（パーミッション）を取得する
+    stat.mode.to_s(8)[-3..].each_char.map do |char|
+      MODE_LIST[char.to_i]
+    end.join
   end
 
   def uid
@@ -51,15 +54,5 @@ class FileDetail
 
   def gid
     Etc.getgrgid(@stat.gid).name
-  end
-
-  private
-
-  def get_file_mode(stat)
-    # ファイルモードを8進数に変換して末尾3桁（パーミッション）を取得する
-    result = stat.mode.to_s(8)[-3..].each_char.map do |char|
-      MODE_LIST[char.to_i]
-    end
-    result.join
   end
 end
