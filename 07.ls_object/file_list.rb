@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class FileList
-  attr_reader :name_list, :directory
-
   def initialize(path, reverse_required, hidden_file_required)
     @path = path
     @reverse_required = reverse_required

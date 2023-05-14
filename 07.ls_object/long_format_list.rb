@@ -4,8 +4,6 @@ require_relative 'file_detail'
 require_relative 'file_list'
 
 class LongFormatList
-  attr_accessor :max_length_hash
-
   def initialize
     max_length = Struct.new(:nlink, :uid, :gid, :file_size, :file_name)
     @max_length = max_length.new(0, 0, 0, 0, 0)
