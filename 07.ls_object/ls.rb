@@ -20,13 +20,25 @@ end
 
 def main
   paths, options = parse_option
-  file_details = FileDetailfetcher.new.fetch(paths, options)
+  file_details = fetch(paths, options)
 
   if options[:l]
     puts LongFormatList.new.format(file_details)
   else
     puts ShortFormatList.new.format(file_details)
   end
+end
+
+def fetch(paths, options)
+  return fetch_file_details(paths[0], options[:r], options[:a]) unless paths.empty?
+
+  fetch_file_details(Dir.pwd, options[:r], options[:a])
+end
+
+private
+
+def fetch_file_details(path, reverse_required, hidden_file_required)
+  FileList.new(path, reverse_required, hidden_file_required).list_detail
 end
 
 main
