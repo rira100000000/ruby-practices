@@ -7,18 +7,13 @@ class ShortFormatList
   def format(file_details)
     last_row = (file_details.size.to_f / COLUMNS).ceil
     file_names_list = []
-    file_names = []
     max_file_names = []
-    file_details.each_with_index do |file_detail, i|
-      file_names << file_detail.name
-      # 表示上の最終行、最後のファイル以外は処理をスキップ
-      next unless ((i + 1) % last_row).zero? || i + 1 == file_details.length
-
-      # 最終行または最終ファイルの場合
+    file_details.each_slice(last_row) do |sliced_file_details|
+      file_names = sliced_file_details.map(&:name)
       max_file_names << file_names.map { |file_name| calc_file_name_size(file_name) }.max
-      file_names.fill('', file_names.length...rows)
+      # transposeするためにfillで要素数を揃える
+      file_names.fill('', file_names.length...last_row)
       file_names_list << file_names
-      file_names = []
     end
 
     add_space_for_line(file_names_list.transpose, max_file_names)
