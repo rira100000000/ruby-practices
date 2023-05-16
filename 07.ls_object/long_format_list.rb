@@ -25,11 +25,11 @@ class LongFormatList
     file_details.map do |file_detail|
       cols = []
       cols << "#{file_detail.type}#{file_detail.mode}"
-      cols << file_detail.stat.nlink.to_s.rjust(@max_length.nlink)
+      cols << file_detail.nlink.to_s.rjust(@max_length.nlink)
       cols << file_detail.uid.rjust(@max_length.uid)
       cols << file_detail.gid.rjust(@max_length.gid)
-      cols << file_detail.stat.size.to_s.rjust(@max_length.file_size)
-      cols << file_detail.stat.mtime.strftime('%b %e %R')
+      cols << file_detail.size.to_s.rjust(@max_length.file_size)
+      cols << file_detail.mtime.strftime('%b %e %R')
       cols << file_detail.name
 
       cols.join(' ')
@@ -39,14 +39,14 @@ class LongFormatList
   def calc_total_block(file_details)
     # statの1ブロック単位は512byte
     # lsコマンドでの1ブロック単位1024byteに合わせるため2で割る
-    file_details.sum { |file| file.stat.blocks / 2 }
+    file_details.sum { |file_detail| file_detail.blocks / 2 }
   end
 
   def update_max_length(file_detail)
-    @max_length.nlink = [file_detail.stat.nlink.to_s.length, @max_length.nlink].max
+    @max_length.nlink = [file_detail.nlink.to_s.length, @max_length.nlink].max
     @max_length.uid = [file_detail.uid.to_s.length, @max_length.uid].max
     @max_length.gid = [file_detail.gid.to_s.length, @max_length.gid].max
-    @max_length.file_size = [file_detail.stat.size.to_s.length, @max_length.file_size].max
+    @max_length.file_size = [file_detail.size.to_s.length, @max_length.file_size].max
     @max_length.file_name = [file_detail.name.length, @max_length.file_name].max
   end
 end
