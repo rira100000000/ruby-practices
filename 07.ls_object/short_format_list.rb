@@ -5,20 +5,14 @@ class ShortFormatList
   SPACE_FOR_COLUMNS = 2
 
   def format(file_details)
-    adjust_list_for_display(file_details)
-  end
-
-  private
-
-  def adjust_list_for_display(file_details)
-    # 行数
-    rows = (file_details.size.to_f / COLUMNS).ceil
+    last_row = (file_details.size.to_f / COLUMNS).ceil
     file_names_list = []
     file_names = []
     max_file_names = []
     file_details.each_with_index do |file_detail, i|
       file_names << file_detail.name
-      next unless ((i + 1) % rows).zero? || i + 1 == file_details.length
+      # 表示上の最終行、最後のファイル以外は処理をスキップ
+      next unless ((i + 1) % last_row).zero? || i + 1 == file_details.length
 
       # 最終行または最終ファイルの場合
       max_file_names << file_names.map { |file_name| calc_file_name_size(file_name) }.max
@@ -29,6 +23,8 @@ class ShortFormatList
 
     add_space_for_line(file_names_list.transpose, max_file_names)
   end
+
+  private
 
   def calc_file_name_size(file_name)
     file_name.each_char.sum do |char|
