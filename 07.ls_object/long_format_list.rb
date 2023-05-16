@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require_relative 'file_detail'
-require_relative 'file_list'
-
 class LongFormatList
   def initialize
     max_length = Struct.new(:nlink, :uid, :gid, :file_size, :file_name)

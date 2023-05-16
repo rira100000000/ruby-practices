@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative 'file_list'
-
 class ShortFormatList
   COLUMNS = 3
   SPACE_FOR_COLUMNS = 2

@@ -5,6 +5,7 @@ require 'optparse'
 require 'etc'
 require_relative 'short_format_list'
 require_relative 'long_format_list'
+require_relative 'file_detail'
 
 def parse_option
   opt = OptionParser.new
@@ -37,7 +38,18 @@ end
 private
 
 def fetch_file_details(path, reverse_required, hidden_file_required)
-  FileList.new(path, reverse_required, hidden_file_required).list_detail
+  flag = hidden_file_required ? File::FNM_DOTMATCH : 0
+  if File::Stat.new(path).directory?
+    directory = path
+    names = Dir.glob('*', base: path, flags: flag).sort
+  else
+    directory = ''
+    names = [path]
+  end
+  sorted_file_names = reverse_required ? names.reverse : names
+  sorted_file_names.map do |name|
+    FileDetail.new(name, directory)
+  end
 end
 
 main
