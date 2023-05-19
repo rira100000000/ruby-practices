@@ -11,8 +11,7 @@ class LongFormatList
 
     result = []
     result << "total #{calc_total_block(file_details)}"
-    result << adjust_list_for_display(file_details)
-
+    result.push(* adjust_list_for_display(file_details))
     result.join("\n")
   end
 
