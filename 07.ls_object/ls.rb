@@ -23,9 +23,9 @@ def main
   file_details = fetch(paths, options)
 
   if options[:l]
-    puts LongFormatList.new.format(file_details)
+    puts LongFormatList.new(file_details).list
   else
-    puts ShortFormatList.new.format(file_details)
+    puts ShortFormatList.new(file_details).list
   end
 end
 

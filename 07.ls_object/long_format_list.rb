@@ -1,14 +1,16 @@
 # frozen_string_literal: true
 
 class LongFormatList
-  def initialize
-    max_length = Struct.new(:nlink, :uid, :gid, :file_size, :file_name)
-    @max_length = max_length.new(0, 0, 0, 0, 0)
+  attr_reader :list
+
+  def initialize(file_details)
+    nlink, uid, gid, file_size, file_name = calc_max_length(file_details)
+
+    @max_length = Data.define(:nlink, :uid, :gid, :file_size, :file_name).new(nlink, uid, gid, file_size, file_name)
+    @list = format(file_details)
   end
 
   def format(file_details)
-    file_details.each { |file_detail| update_max_length(file_detail) }
-
     result = []
     result << "total #{calc_total_block(file_details)}"
     result.push(* adjust_list_for_display(file_details))
@@ -38,11 +40,21 @@ class LongFormatList
     file_details.sum { |file_detail| file_detail.blocks / 2 }
   end
 
-  def update_max_length(file_detail)
-    @max_length.nlink = [file_detail.nlink.to_s.length, @max_length.nlink].max
-    @max_length.uid = [file_detail.uid.to_s.length, @max_length.uid].max
-    @max_length.gid = [file_detail.gid.to_s.length, @max_length.gid].max
-    @max_length.file_size = [file_detail.size.to_s.length, @max_length.file_size].max
-    @max_length.file_name = [file_detail.name.length, @max_length.file_name].max
+  def calc_max_length(file_details)
+    nlink = 0
+    uid = 0
+    gid = 0
+    file_size = 0
+    file_name = 0
+
+    file_details.each do |file_detail|
+      nlink = [file_detail.nlink.to_s.length, nlink].max
+      uid = [file_detail.uid.to_s.length, uid].max
+      gid = [file_detail.gid.to_s.length, gid].max
+      file_size = [file_detail.size.to_s.length, file_size].max
+      file_name = [file_detail.name.length, file_name].max
+    end
+
+    [nlink, uid, gid, file_size, file_name]
   end
 end

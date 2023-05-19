@@ -4,6 +4,12 @@ class ShortFormatList
   COLUMNS = 3
   SPACE_FOR_COLUMNS = 2
 
+  attr_reader :list
+
+  def initialize(file_details)
+    @list = format(file_details)
+  end
+
   def format(file_details)
     last_row = (file_details.size.to_f / COLUMNS).ceil
     file_names_list = []
