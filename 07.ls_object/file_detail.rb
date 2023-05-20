@@ -28,7 +28,7 @@ class FileDetail
 
   attr_reader :name
 
-  def initialize(name, directory = '')
+  def initialize(name, directory)
     @name = name
 
     path = Pathname.new(directory).join(name).to_s
