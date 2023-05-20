@@ -30,12 +30,8 @@ class FileDetail
 
   def initialize(name, directory = '')
     @name = name
-    path = if directory.empty?
-             name
-           else
-             Pathname.new(directory).join(name).to_s
-           end
 
+    path = Pathname.new(directory).join(name).to_s
     @stat = File::Stat.new(path)
   end
 

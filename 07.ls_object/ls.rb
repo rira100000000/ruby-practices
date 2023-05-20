@@ -19,8 +19,8 @@ def parse_option
 end
 
 def main
-  paths, options = parse_option
-  file_details = fetch(paths, options)
+  _paths, options = parse_option
+  file_details = fetch_file_details(options[:r], options[:a])
 
   if options[:l]
     puts LongFormatList.new(file_details).list
@@ -29,23 +29,12 @@ def main
   end
 end
 
-def fetch(paths, options)
-  return fetch_file_details(paths[0], options[:r], options[:a]) unless paths.empty?
-
-  fetch_file_details(Dir.pwd, options[:r], options[:a])
-end
-
 private
 
-def fetch_file_details(path, reverse_required, hidden_file_required)
+def fetch_file_details(reverse_required, hidden_file_required)
   flag = hidden_file_required ? File::FNM_DOTMATCH : 0
-  if File::Stat.new(path).directory?
-    directory = path
-    names = Dir.glob('*', base: path, flags: flag).sort
-  else
-    directory = ''
-    names = [path]
-  end
+  directory = Dir.pwd
+  names = Dir.glob('*', base: directory, flags: flag).sort
   sorted_file_names = reverse_required ? names.reverse : names
   sorted_file_names.map do |name|
     FileDetail.new(name, directory)
