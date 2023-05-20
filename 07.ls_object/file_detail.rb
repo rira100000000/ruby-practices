@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class FileDetail
+  require 'pathname'
+
   TYPE_LIST =
     {
       file: '-',
@@ -31,7 +33,7 @@ class FileDetail
     path = if directory == ''
              name
            else
-             "#{directory}/#{name}"
+             Pathname.new(directory).join(name).to_s
            end
 
     @stat = File::Stat.new(path)
