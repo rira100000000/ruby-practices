@@ -30,7 +30,7 @@ class FileDetail
 
   def initialize(name, directory = '')
     @name = name
-    path = if directory == ''
+    path = if directory.empty?
              name
            else
              Pathname.new(directory).join(name).to_s
