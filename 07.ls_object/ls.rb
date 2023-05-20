@@ -15,11 +15,11 @@ def parse_option
   opt.banner = 'Usage: ls [-a][-r][-l]'
   options = {}
   opt.parse!(ARGV, into: options)
-  [ARGV, options]
+  options
 end
 
 def main
-  _paths, options = parse_option
+  options = parse_option
   file_details = fetch_file_details(options[:r], options[:a])
 
   if options[:l]
