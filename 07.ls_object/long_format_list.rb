@@ -4,9 +4,7 @@ class LongFormatList
   attr_reader :list
 
   def initialize(file_details)
-    nlink, uid, gid, file_size, file_name = calc_max_length(file_details)
-
-    @max_length = Data.define(:nlink, :uid, :gid, :file_size, :file_name).new(nlink, uid, gid, file_size, file_name)
+    @max_length = Data.define(:nlink, :uid, :gid, :file_size, :file_name).new(* calc_max_length(file_details))
     @list = format(file_details)
   end
 
