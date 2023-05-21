@@ -10,6 +10,8 @@ class ShortFormatList
     @list = format(file_details)
   end
 
+  private
+
   def format(file_details)
     last_row = (file_details.size.to_f / COLUMNS).ceil
     file_names_list = []
@@ -24,8 +26,6 @@ class ShortFormatList
 
     add_space_for_line(file_names_list.transpose, max_file_names)
   end
-
-  private
 
   def calc_file_name_size(file_name)
     file_name.each_char.sum do |char|

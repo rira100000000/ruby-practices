@@ -10,14 +10,14 @@ class LongFormatList
     @list = format(file_details)
   end
 
+  private
+
   def format(file_details)
     result = []
     result << "total #{calc_total_block(file_details)}"
     result.push(* adjust_list_for_display(file_details))
     result.join("\n")
   end
-
-  private
 
   def adjust_list_for_display(file_details)
     file_details.map do |file_detail|
