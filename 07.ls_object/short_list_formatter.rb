@@ -1,22 +1,14 @@
 # frozen_string_literal: true
 
-class ShortFormatList
+module ShortListFormatter
   COLUMNS = 3
   SPACE_FOR_COLUMNS = 2
 
-  attr_reader :list
-
-  def initialize(file_details)
-    @list = format(file_details)
-  end
-
-  private
-
-  def format(file_details)
-    last_row = (file_details.size.to_f / COLUMNS).ceil
+  def short_format
+    last_row = (@file_details.size.to_f / COLUMNS).ceil
     file_names_list = []
     max_file_names = []
-    file_details.each_slice(last_row) do |sliced_file_details|
+    @file_details.each_slice(last_row) do |sliced_file_details|
       file_names = sliced_file_details.map(&:name)
       max_file_names << file_names.map { |file_name| calc_file_name_size(file_name) }.max
       # transposeするためにfillで要素数を揃える
@@ -26,6 +18,8 @@ class ShortFormatList
 
     add_space_for_line(file_names_list.transpose, max_file_names)
   end
+
+  private
 
   def calc_file_name_size(file_name)
     file_name.each_char.sum do |char|
