@@ -3,7 +3,9 @@
 
 require 'optparse'
 require 'etc'
-require_relative 'file_list'
+require_relative 'file_detail'
+require_relative 'long_list_formatter'
+require_relative 'short_list_formatter'
 
 def parse_option
   opt = OptionParser.new
@@ -16,14 +18,24 @@ def parse_option
   options
 end
 
+def fetch_file_details(file_names, directory)
+  file_names.map do |name|
+    FileDetail.new(name, directory)
+  end
+end
+
 def main
   options = parse_option
 
-  file_list = FileList.new(options[:r], options[:a])
+  flag = options[:a] ? File::FNM_DOTMATCH : 0
+  directory = Dir.pwd
+  names = Dir.glob('*', base: directory, flags: flag).sort
+  sorted_file_names = options[:r] ? names.reverse : names
+
   if options[:l]
-    puts file_list.long_format
+    puts LongListFormatter.new.format(fetch_file_details(sorted_file_names, directory))
   else
-    puts file_list.short_format
+    puts ShortListFormatter.new.format(fetch_file_details(sorted_file_names, directory))
   end
 end
 

@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-module ShortListFormatter
+class ShortListFormatter
   COLUMNS = 3
   SPACE_FOR_COLUMNS = 2
 
-  def short_format
-    last_row = (@file_details.size.to_f / COLUMNS).ceil
+  def format(file_details)
+    last_row = (file_details.size.to_f / COLUMNS).ceil
     file_names_list = []
     max_file_names = []
-    @file_details.each_slice(last_row) do |sliced_file_details|
+    file_details.each_slice(last_row) do |sliced_file_details|
       file_names = sliced_file_details.map(&:name)
       max_file_names << file_names.map { |file_name| calc_file_name_size(file_name) }.max
       # transposeするためにfillで要素数を揃える
