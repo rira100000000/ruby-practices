@@ -2,10 +2,10 @@
 
 module LongListFormatter
   def long_format
-    max_length = Data.define(:nlink, :uid, :gid, :file_size, :file_name).new(* calc_max_length)
+    max_length = calc_max_length
     result = []
     result << "total #{calc_total_block}"
-    result.push(* adjust_list_for_display(max_length))
+    result.push(*adjust_list_for_display(max_length))
     result.join("\n")
   end
 
@@ -47,6 +47,6 @@ module LongListFormatter
       file_name = [file_detail.name.length, file_name].max
     end
 
-    [nlink, uid, gid, file_size, file_name]
+    Data.define(:nlink, :uid, :gid, :file_size, :file_name).new(nlink, uid, gid, file_size, file_name)
   end
 end
