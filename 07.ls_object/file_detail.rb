@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-class FileDetail
-  require 'pathname'
+require 'pathname'
 
+class FileDetail
   TYPE_LIST =
     {
       file: '-',
