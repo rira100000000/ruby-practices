@@ -21,12 +21,6 @@ module ShortListFormatter
 
   private
 
-  def calc_file_name_size(file_name)
-    file_name.each_char.sum do |char|
-      char.ascii_only? ? 1 : 2
-    end
-  end
-
   def add_space_for_line(file_names_list, max_file_names)
     file_names_list.map do |file_names|
       line_for_display = file_names.map.with_index do |file_name, i|
@@ -37,9 +31,17 @@ module ShortListFormatter
     end
   end
 
+  def calc_file_name_size(file_name)
+    calc_ascii(file_name, 1)
+  end
+
   def count_not_ascii(file_name)
+    calc_ascii(file_name, 0)
+  end
+
+  def calc_ascii(file_name, ascii_size)
     file_name.each_char.sum do |char|
-      char.ascii_only? ? 0 : 1
+      char.ascii_only? ? ascii_size : ascii_size + 1
     end
   end
 end
