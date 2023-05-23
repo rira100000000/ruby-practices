@@ -40,7 +40,7 @@ class FileDetail
   end
 
   def mode
-    # ファイルモードを8進数に変換して末尾3桁（パーミッション）を取得する
+    # 8進数に変換したファイルモードの末尾3桁はパーミッションを表している
     @stat.mode.to_s(8)[-3..].each_char.map do |char|
       MODE_LIST[char.to_i]
     end.join
