@@ -18,7 +18,7 @@ def parse_option
   options
 end
 
-def fetch_file_details(file_names)
+def create_file_details(file_names)
   file_names.map do |name|
     path = Pathname.new(Dir.pwd).join(name).to_s
     FileDetail.new(path)
@@ -38,7 +38,7 @@ def main
                 ShortListFormatter.new
               end
 
-  puts formatter.format(fetch_file_details(sorted_file_names))
+  puts formatter.format(create_file_details(sorted_file_names))
 end
 
 main
