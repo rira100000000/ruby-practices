@@ -32,11 +32,12 @@ def main
   names = Dir.glob('*', base: directory, flags: flag).sort
   sorted_file_names = options[:r] ? names.reverse : names
 
-  if options[:l]
-    puts LongListFormatter.new.format(fetch_file_details(sorted_file_names, directory))
-  else
-    puts ShortListFormatter.new.format(fetch_file_details(sorted_file_names, directory))
-  end
+  formatter = if options[:l]
+                LongListFormatter.new
+              else
+                ShortListFormatter.new
+              end
+  puts formatter.format(fetch_file_details(sorted_file_names, directory))
 end
 
 main
