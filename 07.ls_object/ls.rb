@@ -29,7 +29,7 @@ def main
 
   flag = options[:a] ? File::FNM_DOTMATCH : 0
   directory = Dir.pwd
-  names = Dir.glob('*', base: directory, flags: flag).sort
+  names = Dir.glob('*', flags: flag).sort
   sorted_file_names = options[:r] ? names.reverse : names
 
   formatter = if options[:l]
