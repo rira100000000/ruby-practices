@@ -18,9 +18,10 @@ def parse_option
   options
 end
 
-def fetch_file_details(file_names, directory)
+def fetch_file_details(file_names)
   file_names.map do |name|
-    FileDetail.new(name, directory)
+    path = Pathname.new(Dir.pwd).join(name).to_s
+    FileDetail.new(path)
   end
 end
 
@@ -28,7 +29,6 @@ def main
   options = parse_option
 
   flag = options[:a] ? File::FNM_DOTMATCH : 0
-  directory = Dir.pwd
   names = Dir.glob('*', flags: flag).sort
   sorted_file_names = options[:r] ? names.reverse : names
 
@@ -37,7 +37,8 @@ def main
               else
                 ShortListFormatter.new
               end
-  puts formatter.format(fetch_file_details(sorted_file_names, directory))
+
+  puts formatter.format(fetch_file_details(sorted_file_names))
 end
 
 main

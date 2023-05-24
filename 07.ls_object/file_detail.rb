@@ -28,10 +28,8 @@ class FileDetail
 
   attr_reader :name
 
-  def initialize(name, directory)
-    @name = name
-
-    path = Pathname.new(directory).join(name).to_s
+  def initialize(path)
+    @name = Pathname.new(path).basename.to_s
     @stat = File::Stat.new(path)
   end
 
