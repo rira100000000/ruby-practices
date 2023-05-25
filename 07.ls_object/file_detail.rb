@@ -38,8 +38,8 @@ class FileDetail
   end
 
   def mode
-    # 8進数に変換したファイルモードの末尾3桁はパーミッションを表している
-    @stat.mode.to_s(8)[-3..].each_char.map do |char|
+    permission = @stat.mode.to_s(8)[-3..]
+    permission.each_char.map do |char|
       MODE_LIST[char.to_i]
     end.join
   end
