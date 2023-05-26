@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'pathname'
-
 class FileDetail
   TYPE_LIST =
     {
