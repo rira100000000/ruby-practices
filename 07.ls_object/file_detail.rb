@@ -28,9 +28,9 @@ class FileDetail
 
   attr_reader :name
 
-  def initialize(path)
-    @name = Pathname.new(path).basename.to_s
-    @stat = File::Stat.new(path)
+  def initialize(name)
+    @name = name
+    @stat = File::Stat.new(name)
   end
 
   def type

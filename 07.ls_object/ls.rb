@@ -20,8 +20,7 @@ end
 
 def create_file_details(file_names)
   file_names.map do |name|
-    path = Pathname.new(Dir.pwd).join(name).to_s
-    FileDetail.new(path)
+    FileDetail.new(name)
   end
 end
 
