@@ -31,11 +31,7 @@ def main
   names = Dir.glob('*', flags: flag).sort
   sorted_file_names = options[:r] ? names.reverse : names
 
-  formatter = if options[:l]
-                LongListFormatter.new
-              else
-                ShortListFormatter.new
-              end
+  formatter = options[:l] ? LongListFormatter.new : ShortListFormatter.new
 
   puts formatter.format(create_file_details(sorted_file_names))
 end
