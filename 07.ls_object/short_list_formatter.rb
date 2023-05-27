@@ -5,14 +5,14 @@ class ShortListFormatter
   SPACE_FOR_COLUMNS = 2
 
   def format(file_details)
-    last_row = (file_details.size.to_f / COLUMNS).ceil
+    row_count = (file_details.size.to_f / COLUMNS).ceil
     file_names_list = []
     max_file_names = []
-    file_details.each_slice(last_row) do |sliced_file_details|
+    file_details.each_slice(row_count) do |sliced_file_details|
       file_names = sliced_file_details.map(&:name)
       max_file_names << file_names.map { |file_name| calc_file_name_size(file_name) }.max
       # transposeするためにfillで要素数を揃える
-      file_names.fill('', file_names.length...last_row)
+      file_names.fill('', file_names.length...row_count)
       file_names_list << file_names
     end
 
