@@ -2,7 +2,6 @@
 # frozen_string_literal: true
 
 require 'optparse'
-require 'etc'
 require_relative 'file_detail'
 require_relative 'long_list_formatter'
 require_relative 'short_list_formatter'

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'etc'
+
 class FileDetail
   TYPE_LIST =
     {
