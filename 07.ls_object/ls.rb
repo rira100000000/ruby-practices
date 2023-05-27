@@ -17,22 +17,21 @@ def parse_options
   options
 end
 
-def create_file_details(file_names)
-  file_names.map do |name|
+def create_file_details(options)
+  flag = options[:a] ? File::FNM_DOTMATCH : 0
+  names = Dir.glob('*', flags: flag).sort
+  sorted_file_names = options[:r] ? names.reverse : names
+
+  sorted_file_names.map do |name|
     FileDetail.new(name)
   end
 end
 
 def main
   options = parse_options
-
-  flag = options[:a] ? File::FNM_DOTMATCH : 0
-  names = Dir.glob('*', flags: flag).sort
-  sorted_file_names = options[:r] ? names.reverse : names
-
+  file_details = create_file_details(options)
   formatter = options[:l] ? LongListFormatter.new : ShortListFormatter.new
-
-  puts formatter.format(create_file_details(sorted_file_names))
+  puts formatter.format(file_details)
 end
 
 main
