@@ -16,12 +16,12 @@ class ShortListFormatter
       file_names_list << file_names
     end
 
-    add_space_for_line(file_names_list.transpose, max_file_names)
+    adjust_list_for_display(file_names_list.transpose, max_file_names)
   end
 
   private
 
-  def add_space_for_line(file_names_list, max_file_names)
+  def adjust_list_for_display(file_names_list, max_file_names)
     file_names_list.map do |file_names|
       line_for_display = file_names.map.with_index do |file_name, i|
         space_count = max_file_names[i] + SPACE_FOR_COLUMNS - count_not_ascii(file_name)
