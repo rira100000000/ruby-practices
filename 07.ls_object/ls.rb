@@ -6,7 +6,7 @@ require_relative 'file_detail'
 require_relative 'long_list_formatter'
 require_relative 'short_list_formatter'
 
-def parse_option
+def parse_options
   opt = OptionParser.new
   opt.on('-a', '.で始まる要素も表示します')
   opt.on('-r', '逆順でソートして表示します')
@@ -24,7 +24,7 @@ def create_file_details(file_names)
 end
 
 def main
-  options = parse_option
+  options = parse_options
 
   flag = options[:a] ? File::FNM_DOTMATCH : 0
   names = Dir.glob('*', flags: flag).sort
